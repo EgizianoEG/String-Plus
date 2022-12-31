@@ -16,7 +16,7 @@ local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCa
 local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
 local SolveIncorrectIndexing = true		--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it (Only available if the module has been required solely))
 local table = table.clone(table)
-table.insert =  function(t, v) t[#t + 1] = v end::any	--| Faster than table.insert function.
+table.insert =  function(t, v) t[#t+1] = v end::any	--| Faster than table.insert function.
 -----------------------------------------------------------------------------------------------|
 
 --| Escapes magic characters in a string.
@@ -423,7 +423,7 @@ function StringPlus.AnalyzeText(Str: string)
 			Num_Words += 1
 			table.insert(WordLenghts, #Word)
 		end
-		for Punc in string.gmatch(Line, "[%p]+") do
+		for _ in string.gmatch(Line, "[%p]+") do
 			Num_Punctuation += 1
 		end
 		Num_Lines += 1
@@ -433,7 +433,7 @@ function StringPlus.AnalyzeText(Str: string)
 		WordLengthSum += Length
 	end
 
-	for Word, Repetations in pairs(WordAppearCount) do
+	for _, Repetations in pairs(WordAppearCount) do
 		if Repetations == 1 then
 			Num_UniqueWords += 1
 		else
