@@ -50,9 +50,9 @@ function StringPlus.RemoveExtraSpaces(Str: string)
 	return (Str:gsub("^%s*(.-)%s*$", "%1"):gsub("%s+", ""))
 end
 
---| MatchIgnoreCase - Simple match function with no case sensitivity.
+--| MatchIgnoreCase - Simple match function with no case sensitivity (Patterns are ignored).
 function StringPlus.MatchIgnoreCase(Str: string, Pattern: string, Init: number?)
-	return (Str:lower()):match(Pattern:lower(), Init)
+	return (Str:lower()):match(Pattern, Init)
 end
 
 --| Returns a new string that is a truncated version of the original string, with a maximum length of `Length` characters.

@@ -42,7 +42,7 @@ end
 -| @param	Str: The string to check.
 -| @return	A boolean value indicating whether the input string is empty (no characters) or not.]]
 function String.IsEmpty(Str: string)
-	return (Str == "" and true) or false
+	return (Str == "")
 end
 
 --[[ IsBlank - Determine whether a string consists solely of whitespace characters.
@@ -56,14 +56,14 @@ end
 -| @param	Str: The string to check.
 -| @return	`true` if the string consists solely of uppercase letters or whitespace characters, `false` otherwise.]]
 function String.IsUpper(Str: string)
-	return (string.match(Str, "^[%u%s]+$") ~= nil)
+	return (string.match(Str, "^[%u%s%p%d]+$") ~= nil)
 end
 
 --[[ IsLower - Returns true if the given string consists only of lowercase letters and spaces, false otherwise.
 -| @param	Str: The string to check.
 -| @return	A boolean indicating whether the string consists only of lowercase letters and spaces.]]
 function String.IsLower(Str: string)
-	return (string.match(Str, "^[%l%s]+$") ~= nil)
+	return (string.match(Str, "^[%l%s%p%d]+$") ~= nil)
 end
 
 --[[ IsTagged - Returns true if the given string is tagged, false otherwise. A string is considered tagged if it consists only of `#` characters.
