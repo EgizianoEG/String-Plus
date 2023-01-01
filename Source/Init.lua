@@ -14,7 +14,7 @@ local StringPlus = {}
 local MockupStringLibrary = false		--| string.sub, string.upper, and etc are integrated...
 local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCase: Default, CamelCase: "testFunction()", SnakeCase: "test_function()".
 local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
-local SolveIncorrectIndexing = true		--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it (Only available if the module has been required solely))
+local SolveIncorrectIndexing = true		--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
 local Typechecking = require(script.TypeChecking)
 local table = table.clone(table)
 table.insert =  function(t, v) t[#t+1] = v end::any	--| Faster than table.insert function.
