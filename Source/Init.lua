@@ -15,6 +15,7 @@ local MockupStringLibrary = false		--| string.sub, string.upper, and etc are int
 local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCase: Default, CamelCase: "testFunction()", SnakeCase: "test_function()".
 local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
 local SolveIncorrectIndexing = true		--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it (Only available if the module has been required solely))
+local Typechecking = require(script.TypeChecking)
 local table = table.clone(table)
 table.insert =  function(t, v) t[#t+1] = v end::any	--| Faster than table.insert function.
 -----------------------------------------------------------------------------------------------|
@@ -460,8 +461,8 @@ function StringPlus.AnalyzeText(Str: string)
 end
 
 --[[ Expand - Expands a string by replacing stringified indexes and table numeric indexes or keys with their corresponding values from a given table (allows you to substitute values from a table into a string and similar to PHP syntax).
--| @param	Str The string to expand.
--| @param	Subset The table containing the values to use for expansion.
+-| @param	Str: The string to expand.
+-| @param	Subset: The table containing the values to use for expansion.
 -| @return	The expanded string (Mathematical operations aren't supported).]]
 function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 	local SubsetPattern = "%${([%w_ %.%(#%)]+)}"    --| The preferred expansion pattern (default: ${}).
@@ -729,5 +730,5 @@ if MockupStringLibrary then
 	end
 end
 
------------------
-return StringPlus
+--------------------------------------------------
+return StringPlus :: Typechecking.StringPlusPascal
