@@ -37,7 +37,7 @@ end
 
 --| RemoveConsonants - removes all consonants from a given string and replaces them with a specified replacement string or "".
 function StringPlus.RemoveConsonants(Str: string, Replacement: string?)
-	return (Str:gsub("[^AEIOUaeiou]", Replacement or ""))
+	return (Str:gsub("[^AEIOUaeiou%p%s%d%c%z]", Replacement or ""))
 end
 
 --| RemovePunctuation - removes all punctuation characters from a given string and replaces them with a specified replacement string or "".
