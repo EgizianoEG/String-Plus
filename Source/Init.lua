@@ -47,19 +47,26 @@ end
 
 --| RemoveExtraSpace - removes leading and trailing whitespace from a given string, as well as any extra whitespace between words.
 function StringPlus.RemoveExtraSpaces(Str: string)
-	return (Str:gsub("^%s*(.-)%s*$", "%1"):gsub("%s+", ""))
+	return (Str:gsub("^%s*(.-)%s*$", "%1"):gsub("%s+", " "))
 end
 
---| MatchIgnoreCase - Simple match function with no case sensitivity (Patterns are ignored).
+--| MatchIgnoreCase - Simple match function with no case sensitivity.
 function StringPlus.MatchIgnoreCase(Str: string, Pattern: string, Init: number?)
-	return (Str:lower()):match(Pattern, Init)
+	return (Str:lower()):match(Pattern:lower(), Init)
 end
 
 --| Returns a new string that is a truncated version of the original string, with a maximum length of `Length` characters.
 --|  * If the string is longer than `Length`, it is truncated and has an optional `OmissionSuffix` added to the end.
 --|  * If `OmissionSuffix` is not provided, the default suffix is an ellipsis (`...`).
 function StringPlus.Truncate(Str: string, Length: number, OmissionSuffix: string?)
-	return (#Str > Length and Str:sub(1, Length) .. (type(OmissionSuffix) == "string" and OmissionSuffix)::string or "...") or Str
+	if #Str > Length then
+		if type(OmissionSuffix) == "string" then
+			Str = Str:sub(1, Length) .. OmissionSuffix
+		else
+			Str = Str:sub(1, Length) .. ("...")
+		end
+	end
+	return Str
 end
 
 --| SwapCase - swaps the case of all alphabetical characters in a given string.
@@ -144,11 +151,11 @@ end
 -| @return	 The modified string with the tab characters expanded.]]
 function StringPlus.ExpandTabs(Str: string, TabSize: number?)
 	local TabSize = (TabSize and math.floor(TabSize)) or 4
-	return Str:gsub("([^\t\r\n]*)\t", function(StrBeforeTab)
+	return Str:gsub("([^\t\r\n]*)\t", function(Capture)
 		if TabSize == 0 then
-			return StrBeforeTab
+			return Capture
 		else
-			return StrBeforeTab .. (" "):rep(TabSize - (#StrBeforeTab % TabSize))
+			return Capture .. (" "):rep(TabSize - (#Capture % TabSize))
 		end
 	end)
 end
@@ -177,17 +184,6 @@ function StringPlus.Count(Str: string, Pattern: string, Start: number?, End: num
 		Count += 1
 	end
 	return Count
-end
-
---[[ CountWords - counts the number of words within a given string.
--| @param	Str: The string in which to count the words.
--| @return	The number of words in the string.]]
-function StringPlus.Words(Str: string)
-	local Words = {}
-	for Word in string.gmatch(Str, "%S+") do
-		Words[#Words+1] = Word
-	end
-	return Words
 end
 
 --[[ StartsWith - checks if a given string starts with one or more specified prefixes.
