@@ -223,10 +223,10 @@ end
 --[[ Contains - Determines if a string contains any of the given substrings.
 -| @param	Str: The string to search in.
 -| @param	SubStrings: A single string or a table of strings to search for.
--| @return True if the string contains any of the given substrings, false otherwise.
--| @return The first matching substring, or nil if no match was found.
--| @return The start index of the first matching substring, or 0 if no match was found.
--| @return The end index of the first matching substring, or 0 if no match was found.]]
+-| @return	true if the string contains any of the given substrings, false otherwise.
+-| @return	The first matching substring, or nil if no match was found.
+-| @return	The start index of the first matching substring, or 0 if no match was found.
+-| @return	The end index of the first matching substring, or 0 if no match was found.]]
 function StringPlus.Contains(Str: string, SubStrings: (string | {string}))
 	if type(SubStrings) == "table" then
 		for _, SubString in ipairs(SubStrings) do
@@ -263,30 +263,30 @@ end
 -| @param	Array: The array of strings to sort.
 -| @param	Order: The sort order to use. Can be Enum.SortDirection.Ascending (ascending alphabetical order) or Enum.SortDirection.Descending (descending alphabetical order). If not provided, the default sort order is ascending.
 -| @return	The modified array with the strings sorted in the specified order.]]
-function StringPlus.AlphabeticalOrder(Array: {string}, Order: Enum.SortDirection?)
-	table.sort(Array, function(Str1, Str2)
+function StringPlus.AlphabeticalOrder(StringArray: {string}, Order: Enum.SortDirection?)
+	table.sort(StringArray, function(Str1, Str2)
 		if Order == Enum.SortDirection.Ascending or Order == nil then
 			return Str1 < Str2
 		else
 			return Str2 < Str1
 		end
 	end)
-	return Array
+	return StringArray
 end
 
 --[[ SortByLength - sorts an array of strings by their length.
 -| @param	Array: The array of strings to sort.
 -| @param	Order: The sort order to use. Can be Enum.SortDirection.Ascending (ascending length order) or Enum.SortDirection.Descending (descending length order). If not provided, the default sort order is ascending.
 -| @return	The modified array with the strings sorted by their length in the specified order.]]
-function StringPlus.SortByLength(Array: {string}, Order: Enum.SortDirection?)
-	table.sort(Array, function(Str1, Str2)
+function StringPlus.SortByLength(StringArray: {string}, Order: Enum.SortDirection?)
+	table.sort(StringArray, function(Str1, Str2)
 		if Order == Enum.SortDirection.Ascending or Order == nil then
 			return #Str1 < #Str2
 		else
 			return #Str2 < #Str1
 		end
 	end)
-	return Array
+	return StringArray
 end
 
 --[[ FilterByLength - filters an array of strings by their length.
@@ -294,12 +294,13 @@ end
 -| @param	Length: The length of the strings to keep.
 -| @return	The modified array containing only the strings with the specified length.]]
 function StringPlus.FilterByLength(StringArray: {string}, Length: number)
-	for i, String in ipairs(StringArray) do
-		if #String ~= Length then
-			table.remove(StringArray, i)
+	local Filtered = {}
+	for _, String in ipairs(StringArray) do
+		if #String == Length then
+			table.insert(Filtered, String)
 		end
 	end
-	return StringArray
+	return Filtered
 end
 
 --[[ GetLongestWord - returns the longest word in a string.
@@ -307,7 +308,7 @@ end
 -| @return	The longest word in the string along with its length (character count).]]
 function StringPlus.LongestWord(Str: string)
 	local LongestWord, Characters = "", 0
-	for Word in string.gmatch(Str, "%S+") do
+	for Word in string.gmatch(Str, "[%a]+") do
 		if #Word > Characters then
 			LongestWord = Word
 			Characters = #Word
@@ -330,29 +331,31 @@ end
 -| @return	The converted string in CamelCase.]]
 function StringPlus.CamelCase(Str: string)
 	if string.lower(Str) == Str then
-		return (Str:gsub("_%l?", function(Cap)
+		Str = (Str:gsub("_%l?", function(Cap)
 			return Cap:sub(2):upper()
 		end))
 	elseif Str:sub(1, 1):lower() ~= Str:sub(1, 1) then
-		return (Str:sub(1, 1):lower() .. Str:sub(2)):gsub("_%l?", function(Cap)
+		Str = (Str:sub(1, 1):lower() .. Str:sub(2)):gsub("_%l?", function(Cap)
 			return Cap:sub(2):upper()
 		end)
-	else
-		return Str
 	end
+	return Str
 end
 
 --[[ Converts a string from camelCase/PascalCase to snake_case.
 -| @param	Str: The string to convert.
 -| @return	The converted string in snake_case.]]
 function StringPlus.SnakeCase(Str: string)
-	if Str:match("^%u+$") or Str:match("^%l+$") then
+	if Str:match("^%u+$") or Str:match("^[%l_]+$") then
 		return Str:lower()
 	end
-
-	return (Str:sub(1, 1):lower() .. Str:sub(2)):gsub("_+", ""):gsub("(%l%u)", function(Cap)
-		return Cap:sub(1, 1) .. "_" .. Cap:sub(2):lower()
+	Str = (Str:sub(1, 1):lower() .. Str:sub(2)):gsub("[%p]+", ""):gsub("(%l%u)", function(Cap)
+		return Cap:sub(1, 1):lower() .. ("_") .. Cap:sub(2):lower()
 	end)
+	Str = Str:gsub("(%l%u)", function(Cap)
+		return Cap:sub(1, 1):lower() .. ("_") .. Cap:sub(2):lower()
+	end)
+	return Str
 end
 
 --[[ UniqueWords - Extracts the unique words from a string.
@@ -363,13 +366,15 @@ end
 -| @return table|string The unique words in the input string. If ReturnAsString is not provided or is set to false, the unique words will be returned as an array. Otherwise, they will be returned as a string.]]
 function StringPlus.UniqueWords(Str: string, ReturnString: boolean?)
 	local UniqueWords = {}
-	for Word in string.gmatch(Str, "%S+") do
+	for Word in string.gmatch(Str, "[^%s%c%p%d]+") do
 		local Added = table.find(UniqueWords, Word)
 		if not Added then
 			table.insert(UniqueWords, Word)
+		else
+			table.remove(UniqueWords, Added)
 		end
 	end
-	return (not ReturnString and UniqueWords) or table.concat(UniqueWords, " ")
+	return (not ReturnString and UniqueWords) or table.concat(UniqueWords, (" "))
 end
 
 --[[ AnalyzeText - Calculates statistical information about a string.
@@ -388,8 +393,8 @@ function StringPlus.AnalyzeText(Str: string)
 	local WordLengthSum = 0
 
 	for Line in string.gmatch(Str, "[^\r\n]+") do
-		for Word in string.gmatch(Line, "[^%s%.;]+") do
-			for Char in string.gmatch(Word, ".") do
+		for Word in string.gmatch(Line, "[%a]+") do
+			for Char in string.gmatch(Word, "[.]") do
 				if string.match(Char, "[%a]") then
 					if string.match(Char, "[aeiouAEIOU]") then
 						Num_Vowels += 1
@@ -397,8 +402,6 @@ function StringPlus.AnalyzeText(Str: string)
 						Num_Consonants += 1
 					end
 					Num_Alpha += 1
-				elseif string.match(Char, "[%d]") then
-					Num_Digits += 1
 				end
 			end
 
@@ -420,8 +423,12 @@ function StringPlus.AnalyzeText(Str: string)
 			Num_Words += 1
 			table.insert(WordLenghts, #Word)
 		end
-		for _ in string.gmatch(Line, "[%p]+") do
-			Num_Punctuation += 1
+		for Capture in string.gmatch(Line, "[%S]") do
+			if string.match(Capture, "[%d]") then
+				Num_Digits += 1
+			elseif string.match(Capture, "[%p]") then
+				Num_Punctuation += 1
+			end
 		end
 		Num_Lines += 1
 	end
@@ -461,11 +468,10 @@ end
 -| @param	Subset: The table containing the values to use for expansion.
 -| @return	The expanded string (Mathematical operations aren't supported).]]
 function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
-	local SubsetPattern = "%${([%w_ %.%(#%)]+)}"    --| The preferred expansion pattern (default: ${}).
-	local TNIPattern = "%(#%d+%)"                   --| Table Numeric Index pattern e.g. "(#20)" will be the value of the 20th item in the subset table.
-	local Replacements = 0
+	local SubsetPattern = "%${([%w_ %.%(#%)]+)}"      --| The preferred expansion pattern (default: ${}).
+	local TNIPattern = "%(#(%d+)%)"                   --| Table Numeric Index pattern e.g. "(#20)" will be the value of the 20th item in the subset table.
 
-	Str, Replacements = Str:gsub(SubsetPattern, function(Capture)
+	Str = Str:gsub(SubsetPattern, function(Capture)
 		if Subset[Capture] then return Subset[Capture] end
 		local Modified = Capture:gsub("%S+", function(SubCap)
 			if SubCap:match("%.+") then
@@ -497,7 +503,7 @@ function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 		end)
 		return Modified
 	end)
-	return Str, Replacements
+	return Str
 end
 
 --[[ ApplyTitleCase - Converts a string to title case, with optional strict adherence to title case rules.
@@ -543,7 +549,7 @@ end
 -| @param	KeepEnds(optional): Specifies whether to include line endings in the split lines. If this parameter is not provided, or is set to false, line endings will not be included in the split lines. If KeepEnds is set to true, line endings will be included.
 -| @param	ReturnAsATuple (optional): Specifies whether to return the split lines as a tuple. If this parameter is not provided, or is set to false, the split lines will be returned as an array. If ReturnAsTuple is set to true, the split lines will be returned as a tuple.
 -| @return	The split lines, either as an array or a tuple.]]
-function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boolean?)
+function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boolean?): (...string | {string})
 	local SplittedLines = {}
 	local CurrentPos = 1
 
@@ -568,7 +574,11 @@ function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boole
 	if CurrentPos <= #Str then
 		table.insert(SplittedLines, string.sub(Str, CurrentPos))
 	end
-	return (ReturnAsATuple and table.unpack(SplittedLines)) or SplittedLines
+
+	if ReturnAsATuple then
+		return table.unpack(SplittedLines)
+	end
+	return SplittedLines
 end
 
 --[[ RFind - Finds the last occurrence of a substring within a string, and returns its start and end indices.
@@ -593,11 +603,11 @@ end
 -| @param	Separator: The separator string to split the input string around.
 -| @param	ReturnAsATuple: (optional) Specifies whether to return the split parts as a tuple. If this parameter is not provided, or is set to false, the split parts will be returned as an array. If ReturnAsTuple is set to true, the split parts will be returned as a tuple.
 -| @return	The split parts, either as an array or a tuple or the original string if the separator ain't found.]]
-function StringPlus.Partition(Str: string, Separator: string, ReturnAsATuple: boolean?): (...string | {string})
+function StringPlus.Partition(Str: string, Separator: string, ReturnAsArray: boolean?): (...string | {string})
 	local Start, End = string.find(Str, Separator)
 	if Start and End then
 		local p1, p2, p3 = string.sub(Str, 1, Start - 1), string.sub(Str, Start, End), string.sub(Str, End + 1)
-		if not ReturnAsATuple then
+		if ReturnAsArray then
 			return table.pack(p1, p2, p3)
 		else
 			return p1, p2, p3
@@ -611,12 +621,12 @@ end
 -| @param	Separator: The separator string to split the input string around.
 -| @param	ReturnAsTuple (optional): Specifies whether to return the split parts as a tuple. If this parameter is not provided, or is set to false, the split parts will be returned as an array. If ReturnAsTuple is set to true, the split parts will be returned as a tuple.
 -| @return	The split parts, either as an array or a tuple. If the separator string was not found in the input string, the function returns the input string as-is.]]
-function StringPlus.RPartition(Str: string, Separator: string, ReturnAsTuple: boolean?): (...string | {string})
+function StringPlus.RPartition(Str: string, Separator: string, ReturnAsArray: boolean?): (...string | {string})
 	local Start, End = string.find(Str:reverse(), Separator:reverse())
 	if Start and End then
 		Start, End = #Str - End + 1, #Str - Start + 1
 		local p1, p2, p3 = string.sub(Str, 1, Start - 1), string.sub(Str, Start, End), string.sub(Str, End + 1)
-		if not ReturnAsTuple then
+		if ReturnAsArray then
 			return table.pack(p1, p2, p3)
 		else
 			return p1, p2, p3
@@ -645,13 +655,14 @@ end
 --[[ BinaryDecode - Converts a binary string to a regular string.
 -| @param	Str: The input string.
 -| @return	A string representing the regular string representation of the input binary string.]]
-function StringPlus.BinaryDecode(BinaryStr: string)
-	local String = ("")
-	for Binary in string.gmatch(string.gsub(BinaryStr, "%s", ""), ("."):rep(8)) do
-		local Byte = tonumber(Binary, 2)::number
-		String ..= string.char(Byte)
+function StringPlus.BinaryDecode(Encoded: (string | number))
+	Encoded = tostring(Encoded)
+	local Decoded = ("")
+	for Bit in string.gmatch(string.gsub(Encoded::string, "%s", ""), ("."):rep(8)) do
+		local Character = tonumber(Bit, 2)::number
+		Decoded ..= string.char(Character)
 	end
-	return String
+	return Decoded
 end
 
 --[[ HexDecode - Converts a hexadecimal string to a regular string.
