@@ -14,7 +14,7 @@
         <br>
         <h2><b>Documentation</b></h2>
         <p>
-            The documentation is being continually updated. Please check out the <a href="https://github.com/EgizianoEG/String-Plus/wiki" title="Wiki Link">Wiki</a>.
+            Please refer to the <a href="https://github.com/EgizianoEG/String-Plus/wiki" title="Wiki Link">Wiki</a>.
         </p>
     </div>
     <div id="License">
