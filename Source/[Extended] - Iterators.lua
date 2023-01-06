@@ -20,7 +20,7 @@ function StringIterators.ICharacters(Str: string): ((string, number) -> (), stri
 		if CharIndex <= #Str then
 			return CharIndex, Str:sub(CharIndex, CharIndex)
 		else
-			return nil
+			return
 		end
 	end, Str, 0
 end
@@ -40,7 +40,7 @@ function StringIterators.IWords(Str: string): ((string, number) -> (), string, n
 			LastPosition = End + 1
 			return Start, End, Word
 		else
-			return nil
+			return
 		end
 	end, Str, 0
 end
@@ -62,17 +62,9 @@ function StringIterators.ISentences(Str: string): ((string) -> (), string, numbe
 			LastPosition = End + 1
 			return Start, End, Sentence, (Ending or "")
 		else
-			return nil
+			return
 		end
 	end, Str, 0
-end
-
---[[ ILines - Returns an iterable array containing all the lines in a string.
--| Lines are defined as sequences of characters separated by newline characters (`\n`).
--| @param   Str: The input string.
--| @return  array The array of lines.]]
-function StringIterators.ILines(Str: string)
-	return Str:gsub("\r", "\n"):split("\n")
 end
 
 ----------------------

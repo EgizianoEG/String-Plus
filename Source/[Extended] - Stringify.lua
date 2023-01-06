@@ -23,7 +23,7 @@ local function Stringify(Tabel: {[any]: any}, TabSize: number?, IndentionCharact
 
 	Cache = Cache or {}
 	if Cache and Cache[Tabel] then
-		return "\"*** cycle table reference detected ***\",\n"
+		return "\"*** cycle table reference detected ***\""
 	end
 
 	(Cache::any)[Tabel] = true

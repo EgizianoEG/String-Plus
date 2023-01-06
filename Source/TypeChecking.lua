@@ -14,7 +14,6 @@ export type StringPlusPascal = {
 	IsTagged: (Str: string, FullMatch: boolean?) -> boolean,
 	IsPalindrome: (Str: string, CaseSensitive: boolean?) -> boolean,
 
-	ILines: (Str: string) -> ({string}),
 	ISentences: (Str: string) -> ((string) -> (number, number, string, string), string, number),
 	IWords: (Str: string) -> ((string, number) -> (number, number, string), string, number),
 	ICharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
@@ -118,7 +117,6 @@ export type StringPlusLowered = {
 	istagged: (Str: string, FullMatch: boolean?) -> boolean,
 	ispalindrome: (Str: string, CaseSensitive: boolean?) -> boolean,
 
-	ilines: (Str: string) -> ({string}),
 	isentences: (Str: string) -> ((string) -> (number, number, string, string), string, number),
 	iwords: (Str: string) -> ((string, number) -> (number, number, string), string, number),
 	icharacters: (Str: string) -> ((string, number) -> (number, string), string, number),

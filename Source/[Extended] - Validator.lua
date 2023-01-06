@@ -3,9 +3,9 @@
 --[[ Information:
 	○ Author: @EgizianoEG
 	○ About:
-		- A sub library for StringPlus.
+		-  The Validator Sub-Library is a collection of functions designed to check and validate strings.
 ]]
------------------------------------------------------------------------------------------------|
+--------------------------------------------------------------------------------------------------------|
 local String = {}
 
 --[[ IsNumeric - Returns a boolean value indicating whether the given string contains only numeric characters along with spaces (+,-,0-9,., ).
@@ -13,7 +13,7 @@ local String = {}
 -| @param	Str: The string to check if it contains numeric characters.
 -| @return	True if the string contains only numeric characters, false otherwise.]]
 function String.IsNumeric(Str: string)
-	return (string.match(Str, "^%s*[+-]?%d*%.?%d+%s*$") ~= nil)
+	return (tonumber(Str) ~= nil or string.match(Str, "^%s*[+-]?%d*%.?%d+%s*$") ~= nil)
 end
 
 --[[ IsNumeric - Returns a boolean value indicating whether the given string contains only integer characters (+,-,0-9).
@@ -28,42 +28,35 @@ end
 -| @param	Str: The string to check.
 -| @return	True: if the string contains only alphabetic characters, false otherwise.]]
 function String.IsAlpha(Str: string)
-	return (string.match(Str, "^%a+$") ~= nil)
+	return (string.match(Str, "^[%a%s]+$") ~= nil)
 end
 
 --[[ IsAlphaNum - Returns a boolean indicating whether the input string contains only alphanumeric characters.
 -| @param	Str: The string to check.
 -| @return	A boolean value indicating whether the input string contains only alphanumeric characters.]]
 function String.IsAlphaNum(Str: string)
-	return (string.match(Str, "^%w+$") ~= nil)
-end
-
---[[ IsEmpty - Returns a boolean indicating whether the input string does not contain Anything.
--| @param	Str: The string to check.
--| @return	A boolean value indicating whether the input string is empty (no characters) or not.]]
-function String.IsEmpty(Str: string)
-	return (Str == "")
+	return (string.match(Str, "^[%w%s]+$") ~= nil)
 end
 
 --[[ IsBlank - Determine whether a string consists solely of whitespace characters.
 -| @param	Str: The string to check.
 -| @return	`true` if the string consists solely of whitespace characters, `false` otherwise.]]
 function String.IsBlank(Str: string)
-	return (string.match(Str, "^%s+$") ~= nil)
+	return (Str == "" or string.match(Str, "^%s+$") ~= nil)
 end
 
 --[[ IsUpper - Determine whether a string consists solely of uppercase letters or whitespace characters.
 -| @param	Str: The string to check.
 -| @return	`true` if the string consists solely of uppercase letters or whitespace characters, `false` otherwise.]]
 function String.IsUpper(Str: string)
-	return (string.match(Str, "^[%u%s%p%d]+$") ~= nil)
+	return (Str ~= "" and string.upper(Str) == Str and string.match(Str, "^[%d%s%p]+$") == nil)
 end
 
 --[[ IsLower - Returns true if the given string consists only of lowercase letters and spaces, false otherwise.
 -| @param	Str: The string to check.
 -| @return	A boolean indicating whether the string consists only of lowercase letters and spaces.]]
 function String.IsLower(Str: string)
-	return (string.match(Str, "^[%l%s%p%d]+$") ~= nil)
+	return (Str ~= "" and string.lower(Str) == Str and string.match(Str, "^[%d%s%p]+$") == nil)
 end
 
 --[[ IsTagged - Returns true if the given string is tagged, false otherwise. A string is considered tagged if it consists only of `#` characters.
@@ -80,8 +73,8 @@ end
 -| @param	Str: The string to check.
 -| @return	A boolean indicating whether the string contains only ASCII characters.]]
 function String.IsASCII(Str: string)
-	for i = 1, #Str do
-		if string.byte(Str, i) > 127 then
+	for Char = 1, #Str do
+		if string.byte(Str, Char) > 127 then
 			return false
 		end
 	end
@@ -95,9 +88,9 @@ end
 -| @return	A boolean indicating whether the string is a palindrome.]]
 function String.IsPalindrome(Str: string, CaseSensitive: boolean?)
 	CaseSensitive = CaseSensitive or false
-	if CaseSensitive then
+	if not CaseSensitive then
 		local Lowercase = string.lower(Str)
-		if string.reverse(Str) == Lowercase then
+		if string.reverse(Lowercase) == Lowercase then
 			return true
 		end
 	else
@@ -125,7 +118,7 @@ function String.IsTitle(Str: string, Strict: boolean?)
 		"plus", "past", "out", "nor"
 	}
 
-	for Word in string.gmatch(Str, "%S+") do
+	for Word in string.gmatch(Str, "[^%s%d%%%.%$%+%?!;]+") do
 		local FirstChar = string.sub(Word, 1, 1)
 		local RestChars = string.sub(Word, 2, #Word)
 		local SecondHPW = select(-1, string.gsub(Word, "%w%-%u", string.upper))

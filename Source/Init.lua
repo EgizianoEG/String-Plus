@@ -17,7 +17,7 @@ local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a t
 local SolveIncorrectIndexing = true		--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
 local Typechecking = require(script.TypeChecking)
 local table = table.clone(table)
-table.insert =  function(t, v) t[#t+1] = v end::any	--| Faster than table.insert function.
+table.insert =  function(t, v) t[#t+1] = v end::any
 -----------------------------------------------------------------------------------------------|
 
 --| Escapes magic characters in a string.
