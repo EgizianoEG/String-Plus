@@ -1,7 +1,7 @@
 <div id="Main" align="center"">
     <div id="About"">
         <h1><b>String+</b> or <b>StringPlus</b></h1>
-        <a href="https://www.roblox.com/library/11868937809" target="_blank" title="Roblox Model">
+        <a href="https://create.roblox.com/marketplace/asset/11868937809" target="_blank" title="Roblox Model">
             <img src="https://img.shields.io/badge/Roblox-Model-00A0FF?logo=Roblox&logoColor=00A0FF" alt="Roblox Model"/></a>
         <a href="https://opensource.org/licenses/MIT" target="_blank" title="License">
             <img src="https://img.shields.io/badge/License-MIT-%23ffbb45" alt="License"/></a>
