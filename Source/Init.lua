@@ -1,3 +1,4 @@
+local MarketplaceService = game:GetService("MarketplaceService")
 --!strict
 ---------
 --[[ Information:
@@ -733,6 +734,9 @@ end
 --| Integrates the standard string library functions into the module.
 if MockupStringLibrary then
 	for Name, Func in pairs(string) do
+		if FunctionNamesCase == "PascalCase" then
+			Name = string.sub(Name, 1, 1):upper() .. string.sub(Name, 2)
+		end
 		StringPlus[Name] = Func
 	end
 end
