@@ -467,7 +467,8 @@ end
 --[[ Expand - Expands a string by replacing stringified indexes and table numeric indexes or keys with their corresponding values from a given table (allows you to substitute values from a table into a string and similar to PHP syntax).
 -| @param	Str: The string to expand.
 -| @param	Subset: The table containing the values to use for expansion.
--| @return	The expanded string (Mathematical operations aren't supported).]]
+-| @return	The expanded string (Mathematical operations aren't supported).
+-| @Note	This function is not needed any more, luau does now support a similar approach (string interpolation)]]
 function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 	local SubsetPattern = "%${([%w_ %.%(#%)]+)}"      --| The preferred expansion pattern (default: ${}).
 	local TNIPattern = "%(#(%d+)%)"                   --| Table Numeric Index pattern e.g. "(#20)" will be the value of the 20th item in the subset table.
