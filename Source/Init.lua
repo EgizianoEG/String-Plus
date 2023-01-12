@@ -17,7 +17,7 @@ local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCa
 local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
 local SolveIncorrectIndexing = false	--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
 local Typechecking = require(script.TypeChecking)
-local Append =  function(t, v) t[#t+1] = v end::any
+local Append =  function(t, v) t[#t+1] = v end::any		--| table.insert alternative.
 -----------------------------------------------------------------------------------------------|
 
 --| Escapes magic characters in a string.
