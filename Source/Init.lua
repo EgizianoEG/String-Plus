@@ -1,4 +1,3 @@
-local MarketplaceService = game:GetService("MarketplaceService")
 --!strict
 ---------
 --[[ Information:
