@@ -15,10 +15,9 @@ local StringPlus = {}
 local MockupStringLibrary = false		--| string.sub, string.upper, and etc are integrated...
 local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCase: Default, CamelCase: "testFunction()", SnakeCase: "test_function()".
 local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
-local SolveIncorrectIndexing = true		--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
+local SolveIncorrectIndexing = false	--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
 local Typechecking = require(script.TypeChecking)
-local table = table.clone(table)
-table.insert =  function(t, v) t[#t+1] = v end::any
+local Append =  function(t, v) t[#t+1] = v end::any
 -----------------------------------------------------------------------------------------------|
 
 --| Escapes magic characters in a string.
@@ -298,7 +297,7 @@ function StringPlus.FilterByLength(StringArray: {string}, Length: number)
 	local Filtered = {}
 	for _, String in ipairs(StringArray) do
 		if #String == Length then
-			table.insert(Filtered, String)
+			Append(Filtered, String)
 		end
 	end
 	return Filtered
@@ -370,7 +369,7 @@ function StringPlus.UniqueWords(Str: string, ReturnString: boolean?)
 	for Word in string.gmatch(Str, "[^%s%c%p%d]+") do
 		local Added = table.find(UniqueWords, Word)
 		if not Added then
-			table.insert(UniqueWords, Word)
+			Append(UniqueWords, Word)
 		else
 			table.remove(UniqueWords, Added)
 		end
@@ -422,7 +421,7 @@ function StringPlus.AnalyzeText(Str: string)
 				ShortestWord.Length = #Word
 			end
 			Num_Words += 1
-			table.insert(WordLenghts, #Word)
+			Append(WordLenghts, #Word)
 		end
 		for Capture in string.gmatch(Line, "[%S]") do
 			if string.match(Capture, "[%d]") then
@@ -530,17 +529,17 @@ function StringPlus.ApplyTitleCase(Str: string, Strict: boolean?): string
 		local FC = Word:sub(1, 1)
 		local Word = FC .. Word:sub(2, #Word):lower()
 		if i == 1 then
-			table.insert(StrArray, Word)
+			Append(StrArray, Word)
 			continue
 		end
 		if Strict then
 			if table.find(TitleCasePreservations, Word:lower()) then
-				table.insert(StrArray, Word:lower())
+				Append(StrArray, Word:lower())
 			else
-				table.insert(StrArray, Word)
+				Append(StrArray, Word)
 			end
 		else
-			table.insert(StrArray, Word)
+			Append(StrArray, Word)
 		end
 	end
 	return table.concat(StrArray, " ")
@@ -569,12 +568,12 @@ function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boole
 			Line = Line .. LineEnd
 		end
 
-		table.insert(SplittedLines, Line)
+		Append(SplittedLines, Line)
 		CurrentPos = LineEndPos + #LineEnd
 	end
 
 	if CurrentPos <= #Str then
-		table.insert(SplittedLines, string.sub(Str, CurrentPos))
+		Append(SplittedLines, string.sub(Str, CurrentPos))
 	end
 
 	if ReturnAsATuple then
@@ -649,7 +648,7 @@ function StringPlus.BinaryEncode(Str: string)
 			BinaryChar = tostring(Byte % 2) .. BinaryChar
 			Byte = math.modf(Byte / 2)
 		end
-		table.insert(BinaryString, string.format("%.8d", BinaryChar::any))
+		Append(BinaryString, string.format("%.8d", BinaryChar::any))
 	end
 	return table.concat(BinaryString, " ")
 end
