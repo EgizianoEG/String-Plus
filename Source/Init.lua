@@ -578,7 +578,7 @@ function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boole
 	if ReturnAsATuple then
 		return table.unpack(SplittedLines)
 	end
-	return SplittedLines
+	return SplittedLines::any
 end
 
 --[[ RFind - Finds the last occurrence of a substring within a string, and returns its start and end indices.
@@ -659,7 +659,7 @@ end
 function StringPlus.BinaryDecode(Encoded: (string | number))
 	Encoded = tostring(Encoded)
 	local Decoded = ("")
-	for Bit in string.gmatch(string.gsub(Encoded::string, "%s", ""), ("."):rep(8)) do
+	for Bit in string.gmatch(string.gsub(Encoded::string, "[%D]", ""), ("."):rep(8)) do
 		local Character = tonumber(Bit, 2)::number
 		Decoded ..= string.char(Character)
 	end
