@@ -638,18 +638,19 @@ end
 --[[ BinaryEncode - Converts a string to a binary string.
 -| @param	Str The input string.
 -| @return	A string representing the binary representation of the input string.]]
-function StringPlus.BinaryEncode(Str: string)
+function StringPlus.BinaryEncode(Str: string, ByteSeparator: string?)
 	local BinaryString = {}
-	for Character in string.gmatch(Str, ".") do
+	for CharIndex = 1, #Str do
+        local Character = string.sub(Str, CharIndex, CharIndex)
 		local BinaryChar = ""
 		local Byte = string.byte(Character)
 		while Byte > 0 do
 			BinaryChar = tostring(Byte % 2) .. BinaryChar
-			Byte = math.modf(Byte / 2)
+			Byte = math.modf(Byte * 0.5)
 		end
 		Append(BinaryString, string.format("%.8d", BinaryChar::any))
 	end
-	return table.concat(BinaryString, " ")
+	return table.concat(BinaryString, (ByteSeparator or " "))
 end
 
 --[[ BinaryDecode - Converts a binary string to a regular string.
