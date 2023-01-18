@@ -30,7 +30,7 @@ local function Stringify(Tabel: {[any]: any}, TabSize: number?, IndentionCharact
 	local InCharacter = (IndentionCharacter and IndentionCharacter) or (" ")
 	local Indention = (TabSize and InCharacter:rep(TabSize)) or InCharacter:rep(4)
 	local CurrentIndention = (CIndention and (CIndention + 1)) or 1
-	local Stringified = "{\n"
+	local Stringified = {"{\n"}
 
 	local KeyCount = 0
 	local Processed = 0
@@ -42,14 +42,14 @@ local function Stringify(Tabel: {[any]: any}, TabSize: number?, IndentionCharact
 		Processed += 1
 		local VType = type(Value)
 		if VType == "table" and Recursive then
-			Stringified ..= string.format("%s[\"%s\"] = %s%s\n", Indention:rep(CurrentIndention), Key, Stringify(Value, TabSize, InCharacter, true, Cache, CurrentIndention), (Processed < KeyCount and ",") or "")
+			Stringified[#Stringified+1] = string.format("%s[\"%s\"] = %s%s\n", Indention:rep(CurrentIndention), Key, Stringify(Value, TabSize, InCharacter, true, Cache, CurrentIndention), (Processed < KeyCount and ",") or "")
 		else
 			Key = "[" .. ((type(Key) == "number" and Key) or ("\"".. tostring(Key) .."\"")) .. "]"
 			Value = ((VType == "string" and "\"".. Value .."\"") or tostring(Value))
-			Stringified ..= string.format("%s%s = %s%s\n", Indention:rep(CurrentIndention), Key, Value, (Processed < KeyCount and ",") or "")
+			Stringified[#Stringified+1] = string.format("%s%s = %s%s\n", Indention:rep(CurrentIndention), Key, Value, (Processed < KeyCount and ",") or "")
 		end
 	end
-	return string.format("%s%s%s", Stringified, (CurrentIndention > 1 and Indention:rep(CurrentIndention * 0.8)) or "", "}")
+	return string.format("%s%s%s", table.concat(Stringified), (CurrentIndention > 1 and Indention:rep(CurrentIndention * 0.8)) or "", "}")
 end
 
 ----------------
