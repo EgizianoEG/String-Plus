@@ -18,7 +18,7 @@ local function CharactersFromSet(CharSet: string)
 	local Characters = {}
 	for _, Character in ipairs(Cache["."]) do
 		if string.match(Character, CharSet) then
-			Characters[#Characters + 1] = Character
+			Characters[#Characters+1] = Character
 		end
 	end
 	Cache[CharSet] = Characters
@@ -47,11 +47,11 @@ function String.Random(Length: number?, CharSet: string?)
 	local CharSet = ((CharSet and CharSet ~= "" and CharSet) or "[%w]")
 	local CharPattern = (Cache[CharSet] or CharactersFromSet(CharSet))
 	local MaxRange = #CharPattern
-	local Randomized = ("")
-	for _ = 1, Length do
-		Randomized ..= CharPattern[math.random(MaxRange)]
+	local Randomized = {}
+	for CharIndex = 1, Length do
+		Randomized[CharIndex] = CharPattern[math.random(MaxRange)]
 	end
-	return Randomized
+	return table.concat(Randomized)
 end
 
 --[[ GenerateKey - Generates a randomized key of the specified character sets, sections, section length, prefix, and suffix.
@@ -83,7 +83,7 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 	local Delimiter = ((type(Delimiter) == "string" and Delimiter) or "-")
 	local SectionLength = ((type(SectionLength) == "number" and SectionLength > 0 and SectionLength) or 4)
 	local TotalSections = ((type(TotalSections) == "number" and TotalSections > 0 and TotalSections) or 4)
-	local GeneratedKey = ("")
+	local GeneratedKey = {}
 	local MaxCharRange: any
 	local SPatterns
 
@@ -117,13 +117,15 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 	for Section = 1, TotalSections do
 		for _ = 1, SectionLength do
 			if type(SPatterns[Section]) == "table" and type(MaxCharRange) == "table" then
-				GeneratedKey ..= SPatterns[Section][math.random(MaxCharRange[Section])]
+				GeneratedKey[#GeneratedKey+1] = SPatterns[Section][math.random(MaxCharRange[Section])]
 			else
-				GeneratedKey ..= SPatterns[math.random(MaxCharRange)]::any
+				GeneratedKey[#GeneratedKey+1] = SPatterns[math.random(MaxCharRange)]::any
 			end
 		end
-		GeneratedKey ..= (Section ~= TotalSections and Delimiter) or ("")
+		GeneratedKey[#GeneratedKey+1] = (Section ~= TotalSections and Delimiter) or ("")
 	end
+
+	GeneratedKey = table.concat(GeneratedKey)
 
 	if type(Prefix) == "string" then
 		if #Prefix > SectionLength then
