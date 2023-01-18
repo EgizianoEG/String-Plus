@@ -16,42 +16,44 @@ local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCa
 local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
 local SolveIncorrectIndexing = false	--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
 local Typechecking = require(script.TypeChecking)
-local Append =  function(t, v) t[#t+1] = v end::any		--| table.insert alternative.
+local Append =  function(t, v)			--| table.insert alternative with better performance.
+	t[#t+1] = v
+end::any
 -----------------------------------------------------------------------------------------------|
 
 --| Escapes magic characters in a string.
 function StringPlus.Escape(Str: string)
-	return (Str:gsub('([%-%.%+%[%]%(%)%$%^%%%?%*])',"%%%1"))
+	return string.gsub(Str, "([%-%.%+%[%]%(%)%$%^%%%?%*])", "%%%1")
 end
 
 --| EqualsIgnoreCase - simple function that returns a boolean indicating if two strings are equal with case ignored.
 function StringPlus.EqualsIgnoreCase(Str_1: string, Str_2: string)
-	return (Str_1:lower() == Str_2:lower())
+	return string.lower(Str_1) == string.lower(Str_2)
 end
 
 --| RemoveVowels - removes all vowels from a given string and replaces them with a specified replacement string or "".
 function StringPlus.RemoveVowels(Str: string, Replacement: string?)
-	return (Str:gsub("[AEIOUaeiou]", Replacement or ""))
+	return string.gsub(Str, "[AEIOUaeiou]", Replacement or "")
 end
 
 --| RemoveConsonants - removes all consonants from a given string and replaces them with a specified replacement string or "".
 function StringPlus.RemoveConsonants(Str: string, Replacement: string?)
-	return (Str:gsub("[^AEIOUaeiou%p%s%d%c%z]", Replacement or ""))
+	return string.gsub(Str, "[^AEIOUaeiou%p%s%d%c%z]", Replacement or "")
 end
 
 --| RemovePunctuation - removes all punctuation characters from a given string and replaces them with a specified replacement string or "".
 function StringPlus.RemovePunctuation(Str: string, Replacement: string?)
-	return (Str:gsub("[%p]", Replacement or ""))
+	return string.gsub(Str, "[%p]", Replacement or "")
 end
 
 --| RemoveExtraSpace - removes leading and trailing whitespace from a given string, as well as any extra whitespace between words.
 function StringPlus.RemoveExtraSpaces(Str: string)
-	return (Str:gsub("^%s*(.-)%s*$", "%1"):gsub("%s+", " "))
+	return string.gsub(Str, "^%s*(.-)%s*$", "%1"):gsub("%s+", " ")
 end
 
 --| MatchIgnoreCase - Simple match function with no case sensitivity.
 function StringPlus.MatchIgnoreCase(Str: string, Pattern: string, Init: number?)
-	return (Str:lower()):match(Pattern:lower(), Init)
+	return (string.lower(Str)):match(string.lower(Pattern), Init)
 end
 
 --| Returns a new string that is a truncated version of the original string, with a maximum length of `Length` characters.
@@ -60,9 +62,9 @@ end
 function StringPlus.Truncate(Str: string, Length: number, OmissionSuffix: string?)
 	if #Str > Length then
 		if type(OmissionSuffix) == "string" then
-			Str = Str:sub(1, Length) .. OmissionSuffix
+			Str = string.sub(Str, 1, Length) .. OmissionSuffix
 		else
-			Str = Str:sub(1, Length) .. ("...")
+			Str = string.sub(Str, 1, Length) .. ("...")
 		end
 	end
 	return Str
@@ -71,7 +73,7 @@ end
 --| SwapCase - swaps the case of all alphabetical characters in a given string.
 function StringPlus.SwapCase(Str: string)
 	return string.gsub(Str, "%a", function(Char)
-		return (Char:lower() == Char and Char:upper()) or Char:lower()
+		return (string.lower(Char) == Char and string.upper(Char)) or string.lower(Char)
 	end)
 end
 
@@ -82,7 +84,7 @@ end
 function StringPlus.Strip(Str: string, Characters: string?)
 	local Characters = (Characters and Characters ~= "" and Characters) or "%s"
 	local Pattern = string.format("^[%s]*(.-)[%s]*$", Characters, Characters)
-	return Str:gsub(Pattern, "%1")
+	return string.gsub(Str, Pattern, "%1")
 end
 
 --[[ RStrip - removes leading characters from a given string.
@@ -91,7 +93,7 @@ end
 -| @return  The modified string with the leading characters removed.]]
 function StringPlus.RStrip(Str: string, Characters: string?)
 	local Characters = (Characters and Characters ~= "" and Characters) or "%s"
-	return Str:gsub("[".. Characters .."]*$", "")
+	return string.gsub(Str, "[".. Characters .."]*$", "")
 end
 
 --[[ LStrip - removes leading characters from a given string.
@@ -100,7 +102,7 @@ end
 -| @return  The modified string with the leading characters removed.]]
 function StringPlus.LStrip(Str: string, Characters: string?)
 	local Characters = (Characters and Characters ~= "" and Characters) or "%s"
-	return Str:gsub("^[".. Characters .."]*", "")
+	return string.gsub(Str, "^[".. Characters .."]*", "")
 end
 
 --[[ Center - centers a given string within a specified length, using a specified fill character to pad the string on either side.
@@ -150,11 +152,11 @@ end
 -| @return	 The modified string with the tab characters expanded.]]
 function StringPlus.ExpandTabs(Str: string, TabSize: number?)
 	local TabSize = (TabSize and math.floor(TabSize)) or 4
-	return Str:gsub("([^\t\r\n]*)\t", function(Capture)
+	return string.gsub(Str, "([^\t\r\n]*)\t", function(Capture)
 		if TabSize == 0 then
 			return Capture
 		else
-			return Capture .. (" "):rep(TabSize - (#Capture % TabSize))
+			return Capture .. string.rep(" ", (TabSize - (#Capture % TabSize)))
 		end
 	end)
 end
@@ -177,7 +179,7 @@ end
 -| @param	End: The index at which to end searching for the value. If not provided, the search ends at the end of the string.
 -| @return	The number of occurrences of the value in the string.	]]
 function StringPlus.Count(Str: string, Pattern: string, Start: number?, End: number?)
-	local Str = (Start and Str:sub(Start, End)) or Str
+	Str = (Start and string.sub(Str, Start, End)) or Str
 	local Count = 0
 	for _ in string.gmatch(Str, Pattern) do
 		Count += 1
@@ -192,12 +194,12 @@ end
 function StringPlus.Starts(Str: string, Prefixes: (string | {string}))
 	if type(Prefixes) == "table" then
 		for _, Prefix in ipairs(Prefixes) do
-			if #Str >= #Prefix and string.match(Str, "^"..Prefix) then
+			if #Str >= #Prefix and string.match(Str, ("^")..Prefix) then
 				return true
 			end
 		end
 	elseif type(Prefixes) == "string" then
-		return ((#Str >= #Prefixes) and (string.match(Str, "^"..Prefixes)) and true) or false
+		return ((#Str >= #Prefixes) and (string.match(Str, ("^")..Prefixes)) and true) or false
 	end
 	return false
 end
@@ -251,9 +253,13 @@ end
 function StringPlus.SortWords(Str: string, Order: Enum.SortDirection?, ReturnArray: boolean?)
 	local StrTable = string.split(Str, " ")
 	if Order == Enum.SortDirection.Ascending or Order == nil then
-		table.sort(StrTable, function(a, b) return a:lower() < b:lower() end)
+		table.sort(StrTable, function(a, b)
+			return string.lower(a) < string.lower(b)
+		end)
 	else
-		table.sort(StrTable, function(a, b) return a:lower() > b:lower() end)
+		table.sort(StrTable, function(a, b)
+			return string.lower(a) > string.lower(b)
+		end)
 	end
 	return (ReturnArray and StrTable) or table.concat(StrTable, " ")
 end
@@ -282,7 +288,7 @@ function StringPlus.SortByLength(StringArray: {string}, Order: Enum.SortDirectio
 		if Order == Enum.SortDirection.Ascending or Order == nil then
 			return #Str1 < #Str2
 		else
-			return #Str2 < #Str1
+			return #Str1 > #Str2
 		end
 	end)
 	return StringArray
@@ -321,38 +327,39 @@ end
 -| @return	The input string with the characters' order reversed.]]
 function StringPlus.ReverseWords(Str: string)
 	return string.gsub(Str, "%S+", function(Word)
-		return Word:reverse()
+		return string.reverse(Word)
 	end)
 end
 
---[[ Converts a string from snake_case to camelCase.
+--[[ CamelCase - Converts a string from snake_case or PascalCase to camelCase.
 -| @param	Str: The string to convert.
 -| @return	The converted string in CamelCase.]]
 function StringPlus.CamelCase(Str: string)
+	local FirstCharacter = string.sub(Str, 1, 1)
 	if string.lower(Str) == Str then
-		Str = (Str:gsub("_%l?", function(Cap)
-			return Cap:sub(2):upper()
-		end))
-	elseif Str:sub(1, 1):lower() ~= Str:sub(1, 1) then
-		Str = (Str:sub(1, 1):lower() .. Str:sub(2)):gsub("_%l?", function(Cap)
-			return Cap:sub(2):upper()
+		Str = string.gsub(Str, "_(%l?)", function(Cap)
+			return string.upper(Cap)
+		end)
+	elseif string.lower(FirstCharacter) ~= FirstCharacter then
+		Str = string.lower(FirstCharacter) .. string.gsub(string.sub(Str, 2), "_(%a?)", function(Cap)
+			return string.upper(Cap)
 		end)
 	end
 	return Str
 end
 
---[[ Converts a string from camelCase/PascalCase to snake_case.
+--[[ SnakeCase - Converts a string from camelCase or PascalCase to snake_case.
 -| @param	Str: The string to convert.
 -| @return	The converted string in snake_case.]]
 function StringPlus.SnakeCase(Str: string)
-	if Str:match("^%u+$") or Str:match("^[%l_]+$") then
-		return Str:lower()
+	if string.match(Str, "^%u+$") or string.match(Str, "^[%l_]+$") then
+		return string.lower(Str)
 	end
-	Str = (Str:sub(1, 1):lower() .. Str:sub(2)):gsub("[%p]+", ""):gsub("(%l%u)", function(Cap)
-		return Cap:sub(1, 1):lower() .. ("_") .. Cap:sub(2):lower()
+	Str = string.sub(Str, 1, 1):lower() .. string.sub(Str, 2):gsub("[%p]+", ""):gsub("(%l)(%u)", function(Cap1, Cap2: any)
+		return Cap1 .. ("_") .. string.lower(Cap2)
 	end)
-	Str = Str:gsub("(%l%u)", function(Cap)
-		return Cap:sub(1, 1):lower() .. ("_") .. Cap:sub(2):lower()
+	Str = string.gsub(Str, "(%l)(%u)", function(Cap1, Cap2: any)
+		return Cap1 .. ("_") .. string.lower(Cap2)
 	end)
 	return Str
 end
@@ -471,10 +478,10 @@ function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 	local SubsetPattern = "%${([%w_ %.%(#%)]+)}"      --| The preferred expansion pattern (default: ${}).
 	local TNIPattern = "%(#(%d+)%)"                   --| Table Numeric Index pattern e.g. "(#20)" will be the value of the 20th item in the subset table.
 
-	Str = Str:gsub(SubsetPattern, function(Capture)
+	Str = string.gsub(Str, SubsetPattern, function(Capture)
 		if Subset[Capture] then return Subset[Capture] end
-		local Modified = Capture:gsub("%S+", function(SubCap)
-			if SubCap:match("%.+") then
+		local Modified = string.gsub(Capture, "%S+", function(SubCap)
+			if string.match(SubCap, "%.+") then
 				local Keys = string.split(SubCap, ".")
 				local LatestIndex = ""
 				for _, Key in ipairs(Keys) do
@@ -492,11 +499,11 @@ function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 						break
 					end
 				end
-				return (type(LatestIndex) == "string" and LatestIndex) or "-nil-"
+				return (type(LatestIndex) == "string" and LatestIndex) or ("-nil-")
 			end
-			if SubCap:match(TNIPattern) then
-				SubCap = SubCap:gsub(TNIPattern, function(SubSubCap)
-					return Subset[tonumber(SubSubCap)::any] or Subset[SubSubCap] or "-nil-"
+			if string.match(SubCap, TNIPattern) then
+				SubCap = string.gsub(SubCap, TNIPattern, function(SubSubCap)
+					return Subset[tonumber(SubSubCap::string)::any] or Subset[SubSubCap] or "-nil-"
 				end)
 			end
 			return SubCap
@@ -519,19 +526,14 @@ function StringPlus.ApplyTitleCase(Str: string, Strict: boolean?): string
 		"plus", "past", "out", "nor"
 	}
 
-	Str = (Str:gsub("^%l", string.upper))		-- First charachter is uppered.
-	Str = (Str:gsub("%s+%l", string.upper))		-- Chars after space are uppered.
-	Str = (Str:gsub("%w%-%u", string.lower))	-- Chars after dash are lowered.
+	Str = string.gsub(Str, "^%l+", string.upper)    -- First charachter is uppered.
+	Str = string.gsub(Str, "%s+%l", string.upper)   -- Characters after space are uppered.
+	Str = string.gsub(Str, "%w%-%u", string.lower)	-- Characters after dash are lowered.
 
 	-- Lowering any needed characters:
-	for i, Word in Str:split(" ") do
-		local FC = Word:sub(1, 1)
-		local Word = FC .. Word:sub(2, #Word):lower()
-		if i == 1 then
-			Append(StrArray, Word)
-			continue
-		end
-		if Strict then
+	for Index, Word in ipairs(string.split(Str, " ")) do
+		Word = string.sub(Word, 1, 1) .. string.lower(string.sub(Word, 2))
+		if Strict and Index ~= 1 then
 			if table.find(TitleCasePreservations, Word:lower()) then
 				Append(StrArray, Word:lower())
 			else
@@ -608,7 +610,7 @@ function StringPlus.Partition(Str: string, Separator: string, ReturnAsArray: boo
 	if Start and End then
 		local p1, p2, p3 = string.sub(Str, 1, Start - 1), string.sub(Str, Start, End), string.sub(Str, End + 1)
 		if ReturnAsArray then
-			return table.pack(p1, p2, p3)
+			return {p1, p2, p3}
 		else
 			return p1, p2, p3
 		end
@@ -627,7 +629,7 @@ function StringPlus.RPartition(Str: string, Separator: string, ReturnAsArray: bo
 		Start, End = #Str - End + 1, #Str - Start + 1
 		local p1, p2, p3 = string.sub(Str, 1, Start - 1), string.sub(Str, Start, End), string.sub(Str, End + 1)
 		if ReturnAsArray then
-			return table.pack(p1, p2, p3)
+			return {p1, p2, p3}
 		else
 			return p1, p2, p3
 		end
@@ -641,7 +643,7 @@ end
 function StringPlus.BinaryEncode(Str: string, ByteSeparator: string?)
 	local BinaryString = {}
 	for CharIndex = 1, #Str do
-        local Character = string.sub(Str, CharIndex, CharIndex)
+		local Character = string.sub(Str, CharIndex, CharIndex)
 		local BinaryChar = ""
 		local Byte = string.byte(Character)
 		while Byte > 0 do
@@ -710,7 +712,11 @@ if FunctionNamesCase ~= "PascalCase" then
 	if FunctionNamesCase == "CamelCase" then ConvFunction = StringPlus.CamelCase
 	elseif FunctionNamesCase == "SnakeCase" then ConvFunction = StringPlus.SnakeCase
 	elseif FunctionNamesCase == "LowerCase" then ConvFunction = string.lower
-	else ConvFunction = function(str) return str end end
+	else ConvFunction = function(str)
+			return str
+		end
+	end
+
 	local IndexingSolver = function(t, k)
 		return rawget(t, ConvFunction(k)) or nil
 	end

@@ -110,7 +110,7 @@ function String.IsTitle(Str: string, Strict: boolean?)
 	if type(Str) ~= "string" or #Str == 0 then return false end
 	if string.match(Str, "^%l") then return false end
 
-	local FirstCharChecked = false
+	local FirstCharProcessed = false
 	local Lowered = {
 		"a", "an", "and", "or", "the", "but", "in", "on", "for", "up",
 		"at", "by", "for", "from", "with", "under", "until", "atop", "to",
@@ -120,21 +120,21 @@ function String.IsTitle(Str: string, Strict: boolean?)
 
 	for Word in string.gmatch(Str, "[^%s%d%%%.%$%+%?!;]+") do
 		local FirstChar = string.sub(Word, 1, 1)
-		local RestChars = string.sub(Word, 2, #Word)
-		local SecondHPW = select(-1, string.gsub(Word, "%w%-%u", string.upper))
+		local RestChars = string.sub(Word, 2)
+		local SecondHPWRep = select(-1, string.gsub(Word, "%w%-%u", string.upper))
 
 		if FirstChar ~= string.upper(FirstChar) and not table.find(Lowered, Word) then return false end
 		if RestChars ~= string.lower(RestChars) then return false end
-		if SecondHPW > 0 then return false end
+		if SecondHPWRep > 0 then return false end
 
-		if Strict and FirstCharChecked then
+		if Strict and FirstCharProcessed then
 			local Found = table.find(Lowered, Word:lower())
 			if Found and Lowered[Found] ~= Word then
 				return false
 			end
 		end
-		if not FirstCharChecked then
-			FirstCharChecked = true
+		if not FirstCharProcessed then
+			FirstCharProcessed = true
 		end
 	end
 	return true

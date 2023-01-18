@@ -13,11 +13,12 @@ for Charcter = 0, 255 do
 	Cache["."][Charcter+1] = string.char(Charcter)
 end
 
-local function GetCharactersFromSet(CharSet: string)
+--| Returns an array containing all possible characters that are under a specific class.
+local function CharactersFromSet(CharSet: string)
 	local Characters = {}
-	for _, C in ipairs(Cache["."]) do
-		if string.match(C, CharSet) then
-			Characters[#Characters + 1] = C
+	for _, Character in ipairs(Cache["."]) do
+		if string.match(Character, CharSet) then
+			Characters[#Characters + 1] = Character
 		end
 	end
 	Cache[CharSet] = Characters
@@ -44,11 +45,11 @@ end
 function String.Random(Length: number?, CharSet: string?)
 	local Length = ((Length and Length > 0 and Length) or 20)
 	local CharSet = ((CharSet and CharSet ~= "" and CharSet) or "[%w]")
-	local CharPattern = (Cache[CharSet] or GetCharactersFromSet(CharSet))
+	local CharPattern = (Cache[CharSet] or CharactersFromSet(CharSet))
 	local MaxRange = #CharPattern
 	local Randomized = ("")
 	for _ = 1, Length do
-		Randomized ..= CharPattern[math.random(1, MaxRange)]
+		Randomized ..= CharPattern[math.random(MaxRange)]
 	end
 	return Randomized
 end
@@ -90,7 +91,7 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 		SPatterns = {}
 		MaxCharRange = {}
 		for SectionNum, Set in ipairs(CharSet) do
-			SPatterns[SectionNum] = (Cache[Set] or GetCharactersFromSet(Set))
+			SPatterns[SectionNum] = (Cache[Set] or CharactersFromSet(Set))
 			MaxCharRange[SectionNum] = #SPatterns[SectionNum]
 		end
 		if TotalSections > #SPatterns then
@@ -106,9 +107,9 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 	else
 		if type(CharSet) == "string" then
 			CharSet = CharSet
-			SPatterns = (Cache[CharSet] or GetCharactersFromSet(CharSet))::any
+			SPatterns = (Cache[CharSet] or CharactersFromSet(CharSet))::any
 		else
-			SPatterns = (Cache["[%w]"] or GetCharactersFromSet("[%w]"))::any
+			SPatterns = (Cache["[%w]"] or CharactersFromSet("[%w]"))::any
 		end
 		MaxCharRange = #SPatterns
 	end
@@ -116,9 +117,9 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 	for Section = 1, TotalSections do
 		for _ = 1, SectionLength do
 			if type(SPatterns[Section]) == "table" and type(MaxCharRange) == "table" then
-				GeneratedKey ..= SPatterns[Section][math.random(1, MaxCharRange[Section])]
+				GeneratedKey ..= SPatterns[Section][math.random(MaxCharRange[Section])]
 			else
-				GeneratedKey ..= SPatterns[math.random(1, MaxCharRange)]::any
+				GeneratedKey ..= SPatterns[math.random(MaxCharRange)]::any
 			end
 		end
 		GeneratedKey ..= (Section ~= TotalSections and Delimiter) or ("")
@@ -139,7 +140,8 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 			Suffix = string.sub(Suffix, 1, SectionLength)
 		elseif #Suffix < SectionLength then
 			local Set = (type(CharSet) == "string" and CharSet)
-				or (type((CharSet::any)[TotalSections]) == "string" and (CharSet::any)[TotalSections]) or ("[%w]")
+				or (type((CharSet::any)[TotalSections]) == "string" and (CharSet::any)[TotalSections])
+				or ("[%w]")
 			Suffix = String.Random(SectionLength - #Suffix, Set) .. Suffix
 		end
 		GeneratedKey ..= Suffix
