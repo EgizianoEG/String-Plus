@@ -5,7 +5,7 @@
             <img src="https://img.shields.io/badge/Roblox-Model-00A0FF?logo=Roblox&logoColor=00A0FF" alt="Roblox Model"/></a>
         <a href="https://opensource.org/licenses/MIT" target="_blank" title="License">
             <img src="https://img.shields.io/badge/License-MIT-%23ffbb45" alt="License"/></a>
-        <img src="https://img.shields.io/badge/Version-1.0.3-red" alt="Version"/>
+        <img src="https://img.shields.io/badge/Version-1.1-red" alt="Version"/>
         <br>
         <p>
             A library that provides extended functionality for working with strings in Roblox Lua (Luau), beyond what is available in the standard library.
