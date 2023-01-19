@@ -80,7 +80,7 @@ end
 	print(Key4) -- Outputs a string like "[POTWCAI][10111010][HLLHICYR][ylsgikm]"
 ]]
 function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?)
-	local Delimiter = ((type(Delimiter) == "string" and Delimiter) or "-")
+	local Delimiter = (type(Delimiter) == "string" and Delimiter) or ("-")
 	local SectionLength = ((type(SectionLength) == "number" and SectionLength > 0 and SectionLength) or 4)
 	local TotalSections = ((type(TotalSections) == "number" and TotalSections > 0 and TotalSections) or 4)
 	local GeneratedKey = {}
@@ -125,30 +125,32 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 		GeneratedKey[#GeneratedKey+1] = (Section ~= TotalSections and Delimiter) or ("")
 	end
 
-	GeneratedKey = table.concat(GeneratedKey)
-
 	if type(Prefix) == "string" then
 		if #Prefix > SectionLength then
 			Prefix = string.sub(Prefix, 1, SectionLength)
 		elseif #Prefix < SectionLength then
-			Prefix = (Prefix) .. (string.sub(GeneratedKey, (#Prefix+1), SectionLength))
+			Prefix = (Prefix) .. (table.concat(GeneratedKey, (""), #Prefix+1, SectionLength))
 		end
-		GeneratedKey = (Prefix) .. (string.sub(GeneratedKey, (SectionLength+1)))
+		for CIndex = 1, #Prefix do
+			GeneratedKey[CIndex] = string.sub(Prefix, CIndex, CIndex)
+		end
 	end
 
 	if type(Suffix) == "string" then
-		GeneratedKey = string.sub(GeneratedKey, 1, (#GeneratedKey - SectionLength))
 		if #Suffix > SectionLength then
 			Suffix = string.sub(Suffix, 1, SectionLength)
 		elseif #Suffix < SectionLength then
 			local Set = (type(CharSet) == "string" and CharSet)
-				or (type((CharSet::any)[TotalSections]) == "string" and (CharSet::any)[TotalSections])
+				or (type(CharSet) == "table" and CharSet[TotalSections])
 				or ("[%w]")
 			Suffix = String.Random(SectionLength - #Suffix, Set) .. Suffix
 		end
-		GeneratedKey ..= Suffix
+		local CCount = #GeneratedKey
+		for CIndex = 1, #Suffix do
+			GeneratedKey[CCount - SectionLength + CIndex - 1] = string.sub(Suffix, CIndex, CIndex)
+		end
 	end
-	return GeneratedKey
+	return table.concat(GeneratedKey)
 end
 
 -------------
