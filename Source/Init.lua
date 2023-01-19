@@ -18,7 +18,7 @@ local SolveIncorrectIndexing = false	--| Should the module try to find the index
 local Typechecking = require(script.TypeChecking)
 local Append =  function(t, v)			--| table.insert alternative with better performance.
 	t[#t+1] = v
-end::any
+end
 -----------------------------------------------------------------------------------------------|
 
 --| Escapes magic characters in a string.
@@ -225,7 +225,7 @@ end
 -| @param	Str: The string to search in.
 -| @param	SubStrings: A single string or a table of strings to search for.
 -| @return	true if the string contains any of the given substrings, false otherwise.
--| @return	The first matching substring, or nil if no match was found.
+-| @return	The first matching substring, or empty string if no match was found.
 -| @return	The start index of the first matching substring, or 0 if no match was found.
 -| @return	The end index of the first matching substring, or 0 if no match was found.]]
 function StringPlus.Contains(Str: string, SubStrings: (string | {string}))
@@ -242,7 +242,7 @@ function StringPlus.Contains(Str: string, SubStrings: (string | {string}))
 			return true, SubStrings, Start, End
 		end
 	end
-	return false, nil::any, 0, 0
+	return false, "", 0, 0
 end
 
 --[[ SortWords - sorts the words in a given string in a specified order.
@@ -503,7 +503,7 @@ function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 			end
 			if string.match(SubCap, TNIPattern) then
 				SubCap = string.gsub(SubCap, TNIPattern, function(SubSubCap)
-					return Subset[tonumber(SubSubCap::string)::any] or Subset[SubSubCap] or "-nil-"
+					return Subset[tonumber(SubSubCap::string)::any] or Subset[SubSubCap] or ("-nil-")
 				end)
 			end
 			return SubCap
@@ -556,7 +556,7 @@ function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boole
 	local CurrentPos = 1
 
 	while true do
-		local LineEndPos = string.find(Str, "[\r\n]", CurrentPos)::any
+		local LineEndPos = string.find(Str, "[\r\n]", CurrentPos)::number
 		if not LineEndPos then break end
 
 		local Line = string.sub(Str, CurrentPos, LineEndPos - 1)
@@ -580,7 +580,7 @@ function StringPlus.Lines(Str: string, KeepEnds: boolean?, ReturnAsATuple: boole
 	if ReturnAsATuple then
 		return table.unpack(SplittedLines)
 	end
-	return SplittedLines::any
+	return SplittedLines
 end
 
 --[[ RFind - Finds the last occurrence of a substring within a string, and returns its start and end indices.
@@ -590,8 +590,8 @@ end
 -| @param	End: The end index to stop searching at. If this parameter is not provided, the search will end at the end of the string.
 -| @return	The start and end indices of the last occurrence of the substring, or nil if the substring was not found.]]
 function StringPlus.RFind(Str: string, Sub: string, Start: number?, End: number?): (number?, number?)
-	Start = Start or 1
-	End = End or #Str
+	Start = (Start or 1)
+	End = (End or #Str)
 	for i = End:: number, Start:: number, -1 do
 		if string.sub(Str, i, i + #Sub - 1) == Sub then
 			return i, i + (#Sub - 1)
@@ -678,9 +678,9 @@ end
 
 --[[ HexEncode - Converts a regular string to a hexadecimal string.
 -| @param	Str: The input string.
--| @return	A string representing the hexadecimal representation of the input string, or nil if the input string is empty.]]
+-| @return	A string representing the hexadecimal representation of the input string, or the given string if the input string is empty.]]
 function StringPlus.HexEncode(Str: string): string
-	if Str == ("") then return nil::any end
+	if Str == ("") then return Str end
 	return (Str:gsub(".", function(Char) return string.format("%2x", string.byte(Char)) end))
 end
 
@@ -718,10 +718,10 @@ if FunctionNamesCase ~= "PascalCase" then
 	end
 
 	local IndexingSolver = function(t, k)
-		return rawget(t, ConvFunction(k)) or nil
+		return rawget(t, ConvFunction(k))
 	end
 
-	local Temp = {}::{[any]: (any)}
+	local Temp = {}
 	for n, f in pairs(StringPlus) do
 		Temp[ConvFunction(n)] = f
 		StringPlus[n] = nil
