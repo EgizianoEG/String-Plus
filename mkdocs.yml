@@ -58,12 +58,6 @@ plugins:
     - minify:
         minify_html: true
 
-    - social:
-        cards: true
-        cards_color:
-          fill: "#ffcc99"
-          text: "#FFF"
-
 markdown_extensions:
     - abbr
     - admonition
@@ -74,3 +68,6 @@ markdown_extensions:
     - pymdownx.superfences
     - pymdownx.tabbed:
         alternate_style: true
+
+extra_css:
+  - stylesheets/extra.css
