@@ -1,0 +1,76 @@
+site_url: https://egizianoeg.github.io/String-Plus/
+site_name: StringPlus
+site_author: "@EgizianEG"
+site_description: Documentation site for StringPlus library
+
+repo_name: EgizianEG/String-Plus
+repo_url: https://github.com/EgizianoEG/String-Plus
+
+docs_dir: Docs
+use_directory_urls: true
+
+theme:
+    language: en
+    name: material
+    icon:
+        repo: fontawesome/brands/github
+        logo: material/text
+
+    font:
+        text: Comfortaa
+        code: Fira Mono
+
+    features:
+        - header.autohide
+        - navigation.top
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.footer
+
+        - search.share
+        - search.suggest
+        - search.highlight
+
+        - content.action.view
+        - content.action.edit
+        - content.code.copy
+        - content.tooltips
+    
+    palette:
+      - media: "(prefers-color-scheme: light)"
+        scheme: default
+        toggle:
+            icon: material/brightness-7
+            name: Light Mode
+        primary: teal
+        accent: light blue
+    
+      - media: "(prefers-color-scheme: dark)"
+        scheme: slate
+        toggle:
+          icon: material/brightness-4
+          name: Dark Mode
+        primary: teal
+        accent: light blue
+
+
+plugins:
+    - minify:
+        minify_html: true
+
+    - social:
+        cards: true
+        cards_color:
+          fill: "#ffcc99"
+          text: "#FFF"
+
+markdown_extensions:
+    - abbr
+    - admonition
+    - footnotes
+    - def_list
+    - pymdownx.details
+    - pymdownx.highlight
+    - pymdownx.superfences
+    - pymdownx.tabbed:
+        alternate_style: true
