@@ -14,6 +14,7 @@ use_directory_urls: true
 theme:
     language: en
     name: material
+    custom_dir: Docs/Overrides
     favicon: Images/SiteIcon.png
     icon:
         repo: fontawesome/brands/github
@@ -70,16 +71,30 @@ plugins:
        minify_html: true
 
 markdown_extensions:
-    - toc
+    - toc:
+        permalink: ⚓︎
+        permalink_title: Anchor Link
+        
     - abbr
     - admonition
     - footnotes
     - def_list
+    - pymdownx.emoji
     - pymdownx.details
     - pymdownx.highlight
     - pymdownx.superfences
     - pymdownx.tabbed:
         alternate_style: true
+
+extra:
+  generator: true
+  social:
+    - icon: Custom/RobloxStudioIcon
+      link: https://devforum.roblox.com/t/2094017
+      name: DevForum Topic
+    - icon: simple/roblox
+      link: https://www.roblox.com/library/11868937809
+      name: Roblox Model
 
 extra_css:
   - Stylesheets/LightMode.css
