@@ -57,11 +57,17 @@ theme:
 
 plugins:
     - tags
-    - social
-    - minify:
-        minify_html: true
+    - social:
+        cards: true
+        cards_font: Roboto
+        cards_color:
+          fill: "#7FBF3F"
+          text: "#F7F8F9"
+    #- minify:
+    #    minify_html: true
 
 markdown_extensions:
+    - toc
     - abbr
     - admonition
     - footnotes
@@ -73,4 +79,16 @@ markdown_extensions:
         alternate_style: true
 
 extra_css:
-  - stylesheets/extra.css
+  - Stylesheets/LightMode.css
+  - Stylesheets/DarkMode.css
+
+# Documentation Tree:
+nav:
+  - Home: index.md
+  - Main Module: MainModule.md
+  - Sub-Modules:
+      - Validator: Sub-Modules\Validator.md
+      - Random: Sub-Modules\Random.md
+      - Iterators: Sub-Modules\Iterators.md
+      - Stringify: Sub-Modules\Stringify.md
+      - UTF8Reverse: Sub-Modules\UTF8Reverse.md
