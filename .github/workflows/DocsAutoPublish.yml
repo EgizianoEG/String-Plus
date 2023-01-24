@@ -1,11 +1,14 @@
-name: DocsAutoPublish 
+name: DocsAutoUpdate
 on:
+  workflow_dispatch:
   push:
     branches:
-      - master 
+      - master
       - main
+
 permissions:
   contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -7,6 +7,8 @@ repo_name: EgizianEG/String-Plus
 repo_url: https://github.com/EgizianoEG/String-Plus
 
 docs_dir: Docs
+site_dir: Site
+remote_branch: gh-pages
 use_directory_urls: true
 
 theme:
@@ -53,8 +55,8 @@ theme:
         primary: teal
         accent: light blue
 
-
 plugins:
+    - tags
     - minify:
         minify_html: true
 
