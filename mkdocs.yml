@@ -90,8 +90,8 @@ nav:
   - Home: index.md
   - Main Module: MainModule.md
   - Sub-Modules:
-      - Validator: Sub-Modules/Validator.md
-      - Random: Sub-Modules/Random.md"
-      - Iterators: Sub-Modules/Iterators.md
-      - Stringify: Sub-Modules/Stringify.md
-      - UTF8Reverse: Sub-Modules/UTF8Reverse.md
+      - Validator: Sub-Modules/Validator
+      - Random: Sub-Modules/Random
+      - Iterators: Sub-Modules/Iterators
+      - Stringify: Sub-Modules/Stringify
+      - UTF8Reverse: Sub-Modules/UTF8Reverse
