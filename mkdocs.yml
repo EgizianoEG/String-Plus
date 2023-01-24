@@ -1,7 +1,7 @@
 site_url: https://egizianoeg.github.io/String-Plus/
 site_name: StringPlus
 site_author: "@EgizianEG"
-site_description: Documentation site for StringPlus library
+site_description: The Documentation Site for StringPlus Library
 
 repo_name: EgizianEG/String-Plus
 repo_url: https://github.com/EgizianoEG/String-Plus
@@ -14,9 +14,10 @@ use_directory_urls: true
 theme:
     language: en
     name: material
+    favicon: Images/SiteIcon.png
     icon:
         repo: fontawesome/brands/github
-        logo: material/text
+        logo: material/code-string
 
     font:
         text: Roboto
@@ -52,19 +53,22 @@ theme:
         toggle:
           icon: material/brightness-4
           name: Dark Mode
-        primary: teal
+        primary: blue grey
         accent: light blue
 
 plugins:
+    - search:
+        separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+
     - tags
     - social:
         cards: true
         cards_font: Roboto
         cards_color:
-          fill: "#7FBF3F"
-          text: "#202428"
-    #- minify:
-    #    minify_html: true
+          fill: "#008C7D"
+          text: "#F7F8F9"
+    - minify:
+       minify_html: true
 
 markdown_extensions:
     - toc
