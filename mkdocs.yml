@@ -19,7 +19,7 @@ theme:
         logo: material/text
 
     font:
-        text: Comfortaa
+        text: Roboto
         code: Fira Mono
 
     features:
@@ -57,6 +57,7 @@ theme:
 
 plugins:
     - tags
+    - social
     - minify:
         minify_html: true
 

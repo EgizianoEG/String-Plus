@@ -2,6 +2,9 @@ name: DocsAutoUpdate
 on:
   workflow_dispatch:
   push:
+    paths:
+      - "Docs/**"
+      - "mkdocs.yml"
     branches:
       - master
       - main
