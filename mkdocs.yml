@@ -62,7 +62,7 @@ plugins:
         cards_font: Roboto
         cards_color:
           fill: "#7FBF3F"
-          text: "#F7F8F9"
+          text: "#202428"
     #- minify:
     #    minify_html: true
 
