@@ -1,3 +1,8 @@
+---
+title: Home
+description: The Documentation Site of StringPlus Luau Library
+---
+
 # Home Page
 
 !!! info
