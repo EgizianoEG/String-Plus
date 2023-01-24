@@ -1,4 +1,5 @@
 Docs/Site/
 Site/
 site/
-*.cache
+*.log
+.cache
