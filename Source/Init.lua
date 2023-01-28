@@ -187,6 +187,64 @@ function StringPlus.Count(Str: string, Pattern: string, Start: number?, End: num
 	return Count
 end
 
+--[[ StartsWith - checks if a given string starts with one or more specified prefixes.
+-| @param	Str: The string to check.
+-| @param	Prefixes: The prefix or prefixes to check for. Can be a string or an array of strings.
+-| @return	True if the string starts with any of the specified prefixes, false otherwise.]]
+function StringPlus.Starts(Str: string, Prefixes: (string | {string}))
+	if type(Prefixes) == "table" then
+		for _, Prefix in ipairs(Prefixes) do
+			if #Str >= #Prefix and string.match(Str, ("^")..Prefix) then
+				return true
+			end
+		end
+	elseif type(Prefixes) == "string" then
+		return ((#Str >= #Prefixes) and (string.match(Str, ("^")..Prefixes)) and true) or false
+	end
+	return false
+end
+
+--[[ EndsWith - checks if a given string ends with one or more specified suffixes.
+-| @param	Str: The string to check.
+-| @param	Suffixes: The suffix or suffixes to check for. Can be a string or an array of strings.
+-| @return	True if the string ends with any of the specified suffixes, false otherwise.]]
+function StringPlus.Ends(Str: string, Suffixes: (string | {string}))
+	if type(Suffixes) == "table" then
+		for _, Suffix in ipairs(Suffixes) do
+			if #Str >= #Suffix and string.match(Str, Suffix.."$") then
+				return true
+			end
+		end
+	elseif type(Suffixes) == "string" then
+		return ((#Str >= #Suffixes) and (string.match(Str, Suffixes.."$")) and true) or false
+	end
+	return false
+end
+
+--[[ Contains - Determines if a string contains any of the given substrings.
+-| @param	Str: The string to search in.
+-| @param	SubStrings: A single string or a table of strings to search for.
+-| @return	true if the string contains any of the given substrings, false otherwise.
+-| @return	The first matching substring, or empty string if no match was found.
+-| @return	The start index of the first matching substring, or 0 if no match was found.
+-| @return	The end index of the first matching substring, or 0 if no match was found.]]
+function StringPlus.Contains(Str: string, SubStrings: (string | {string}))
+	if type(SubStrings) == "table" then
+		for _, SubString in ipairs(SubStrings) do
+			local Start, End = string.find(Str, SubString, 1, true)
+			if Start and End then
+				return true, SubString, Start, End
+			end
+		end
+	elseif type(SubStrings) == "string" then
+		local Start, End = string.find(Str, SubStrings, 1, true)
+		if Start and End then
+			return true, SubStrings, Start, End
+		end
+	end
+	return false, "", 0, 0
+end
+
 --[[ SortWords - sorts the words in a given string in a specified order.
 -| @param	Str: The string to sort.
 -| @param	Order: The sort order to use. Can be Enum.SortDirection.Ascending (ascending alphabetical order) or Enum.SortDirection.Descending (descending alphabetical order). If not provided, the default sort order is ascending.
