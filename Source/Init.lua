@@ -187,10 +187,10 @@ function StringPlus.Count(Str: string, Pattern: string, Start: number?, End: num
 	return Count
 end
 
---[[ SortWords - sorts the words in a given string in a specified order.
+--[[ SortWords - Sorts the words in a given string in a specified order.
 -| @param	Str: The string to sort.
--| @param	Order: The sort order to use. Can be Enum.SortDirection.Ascending (ascending alphabetical order) or Enum.SortDirection.Descending (descending alphabetical order). If not provided, the default sort order is ascending.
--| @param	ReturnArray: the desired return of the function wether an array or a concated string.
+-| @param	Order (Optional): The sort order to use. Can be Enum.SortDirection.Ascending (ascending alphabetical order) or Enum.SortDirection.Descending (descending alphabetical order). If not provided, the default sort order is ascending.
+-| @param	ReturnArray (Optional): the desired return of the function wether an array or a concated string.
 -| @return	An array of the string words or the modified string with the words sorted in the specified order.]]
 function StringPlus.SortWords(Str: string, Order: Enum.SortDirection?, ReturnArray: boolean?)
 	local StrTable = string.split(Str, " ")
@@ -204,21 +204,6 @@ function StringPlus.SortWords(Str: string, Order: Enum.SortDirection?, ReturnArr
 		end)
 	end
 	return (ReturnArray and StrTable) or table.concat(StrTable, " ")
-end
-
---[[ AlphabeticalOrder - sorts an array of strings in alphabetical order.
--| @param	Array: The array of strings to sort.
--| @param	Order: The sort order to use. Can be Enum.SortDirection.Ascending (ascending alphabetical order) or Enum.SortDirection.Descending (descending alphabetical order). If not provided, the default sort order is ascending.
--| @return	The modified array with the strings sorted in the specified order.]]
-function StringPlus.AlphabeticalOrder(StringArray: {string}, Order: Enum.SortDirection?)
-	table.sort(StringArray, function(Str1, Str2)
-		if Order == Enum.SortDirection.Ascending or Order == nil then
-			return Str1 < Str2
-		else
-			return Str2 < Str1
-		end
-	end)
-	return StringArray
 end
 
 --[[ SortByLength - sorts an array of strings by their length.
