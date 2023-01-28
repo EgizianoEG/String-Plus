@@ -200,7 +200,8 @@ end
 
 --[[ IsValidUsername - Returns true if the given string is a valid Roblox username and false if not using some first-layer checkings.
 -| @param	Str: The string to check.
--| @return	A boolean indicating whether the string is a valid username or not.
+-| @return	boolean - A boolean value indicating whether the string is a valid username or not.
+-| @return	string - If the input string is not valid, a feedback string describing the reason for invalidity will be returned If the input is valid, an empty string will be returned
 -| @note	Please do not rely on this function as is for validating user inputs like creating usernames and use text filtering functions to filter them after this function check.]]
 function String.IsValidUsername(Str: string)
     local CharCount = #Str
