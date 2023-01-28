@@ -11,10 +11,10 @@
 ]]
 ---------------------------------------------------------------------------------------------------------------------|
 local StringPlus = {}
-local MockupStringLibrary = false		--| string.sub, string.upper, and etc are integrated...
+local MockupStandardLibrary = false		--| string.sub, string.upper, and etc are integrated...
 local FunctionNamesCase = "PascalCase"	--| LowerCase: "testfunction()", PascalCase: Default, CamelCase: "testFunction()", SnakeCase: "test_function()".
-local IncludeSubLibraryFunctions = true	--| Integrate its functions? (Not as a table)
-local SolveIncorrectIndexing = false	--| Should the module try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
+local IncludeSubLibrarariesFunctions = true	--| Integrate its functions? (Not as tables)
+local SolvetIndexing = false			--| Should the library try to find the indexed function if not found? (like if you indexed a function name that in snake_case while its name is in PascalCase the module will try to return it)
 local Typechecking = require(script.TypeChecking)
 local Append =  function(t, v)			--| table.insert alternative with better performance.
 	t[#t+1] = v
@@ -692,7 +692,7 @@ for _, Library in ipairs(script:GetChildren()) do
 	local Match = string.match(Library.Name, "%[Extended%]%s%-%s(.+)")
 	if Library:IsA("ModuleScript") and Match then
 		local Lib = require(Library)::any
-		if IncludeSubLibraryFunctions then
+		if IncludeSubLibrarariesFunctions then
 			if type(Lib) == "function" then
 				StringPlus[Match] = Lib
 			else
@@ -734,11 +734,11 @@ if FunctionNamesCase ~= "PascalCase" then
 			Temp[ConvFunction(n)] = TT
 		end
 	end
-	StringPlus = (SolveIncorrectIndexing and setmetatable(Temp, {__index = IndexingSolver})::any) or Temp
+	StringPlus = (SolvetIndexing and setmetatable(Temp, {__index = IndexingSolver})::any) or Temp
 end
 
 --| Integrates the standard string library functions into the module.
-if MockupStringLibrary then
+if MockupStandardLibrary then
 	for Name, Func in pairs(string) do
 		if FunctionNamesCase == "PascalCase" then
 			Name = string.sub(Name, 1, 1):upper() .. string.sub(Name, 2)
