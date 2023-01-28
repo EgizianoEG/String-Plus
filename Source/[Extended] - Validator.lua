@@ -198,5 +198,51 @@ function String.IsTitle(Str: string, Strict: boolean?)
 	return true
 end
 
+--[[ IsValidUsername - Returns true if the given string is a valid Roblox username and false if not using some first-layer checkings.
+-| @param	Str: The string to check.
+-| @return	boolean - A boolean value indicating whether the string is a valid username or not.
+-| @return	string - If the input string is not valid, a feedback string describing the reason for invalidity will be returned If the input is valid, an empty string will be returned
+-| @note	Please do not rely on this function as is for validating user inputs like creating usernames and use text filtering functions to filter them after this function check.]]
+function String.IsValidUsername(Str: string)
+    local CharCount = #Str
+    local Feedbacks = {
+        MinChars = "Username must be at least 3 characters long.",
+        MaxChars = "Username must be no longer than 20 characters.",
+        AppropriateChars = "Usernames may only contain letters, numbers, and a single underscore.",
+        PrivateInfo = "Username might contain private information.",
+        ImproperName = "Username not appropriate for Roblox.",
+        MaxUnderscores = "Usernames can have at most one underscore character \"_\".",
+        LEUnderscores = "Usernames cannot start or end with underscore \"_\".",
+    }
+
+    local UnderscoreCount = function()
+        local Count = 0
+        for _ in string.gmatch(Str, "_") do
+            Count += 1
+        end
+        return Count
+    end
+
+    if CharCount < 3 then
+        return false, Feedbacks.MinChars
+    elseif CharCount > 20 then
+        return false, Feedbacks.MaxChars
+    elseif not string.match(Str, "^[%w_]+$") then
+        return false, Feedbacks.AppropriateChars
+    elseif string.match(Str, "^_") or string.match(Str, "_$") then
+        return false, Feedbacks.LEUnderscores
+    elseif UnderscoreCount() > 1 then
+        return false, Feedbacks.MaxUnderscores
+    elseif string.match(Str, "^[%d]$") then
+        if CharCount > 6 then
+            return false, Feedbacks.PrivateInfo
+        else
+            return false, Feedbacks.ImproperName
+        end
+    end
+
+    return true, ("")
+end
+
 -------------
 return String
