@@ -28,14 +28,14 @@ end
 -| @param	Str: The string to check.
 -| @return	True: if the string contains only alphabetic characters, false otherwise.]]
 function String.IsAlpha(Str: string)
-	return (string.match(Str, "^[%a%s]+$") ~= nil)
+	return (string.match(Str, "^[%a%s]+$") ~= nil and not String.IsBlank(Str))
 end
 
 --[[ IsAlphaNum - Returns a boolean indicating whether the input string contains only alphanumeric characters.
 -| @param	Str: The string to check.
 -| @return	A boolean value indicating whether the input string contains only alphanumeric characters.]]
 function String.IsAlphaNum(Str: string)
-	return (string.match(Str, "^[%w%s]+$") ~= nil)
+	return (string.match(Str, "^[%w%s]+$") ~= nil and not String.IsBlank(Str))
 end
 
 --[[ IsBlank - Determine whether a string consists solely of whitespace characters.
