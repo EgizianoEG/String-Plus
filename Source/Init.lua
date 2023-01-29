@@ -567,7 +567,7 @@ end
 --[[ BinaryEncode - Converts a string to a binary string.
 -| @param	Str The input string.
 -| @return	A string representing the binary representation of the input string.]]
-function StringPlus.BinaryEncode(Str: string, ByteSeparator: string?)
+function StringPlus.BinaryEncode(Str: string, Delimiter: string?)
 	local BinaryString = {}
 	for CharIndex = 1, #Str do
 		local Character = string.sub(Str, CharIndex, CharIndex)
@@ -579,7 +579,7 @@ function StringPlus.BinaryEncode(Str: string, ByteSeparator: string?)
 		end
 		Append(BinaryString, string.format("%.8d", BinaryChar::any))
 	end
-	return table.concat(BinaryString, (ByteSeparator or " "))
+	return table.concat(BinaryString, (Delimiter or " "))
 end
 
 --[[ BinaryDecode - Converts a binary string to a regular string.
