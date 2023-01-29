@@ -585,14 +585,15 @@ end
 --[[ BinaryDecode - Converts a binary string to a regular string.
 -| @param	Str: The input string.
 -| @return	A string representing the regular string representation of the input binary string.]]
-function StringPlus.BinaryDecode(Encoded: (string | number))
-	Encoded = tostring(Encoded)
-	local Decoded = ("")
-	for Bit in string.gmatch(string.gsub(Encoded::string, "[%D]", ""), ("."):rep(8)) do
-		local Character = tonumber(Bit, 2)::number
-		Decoded ..= string.char(Character)
+function StringPlus.BinaryDecode(Encoded: string)
+	Encoded = string.gsub(Encoded, "[^01]", "")
+	local Decoded = {}
+	for Index = 1, #Encoded, 8 do
+		local Byte = string.sub(Encoded, Index, (Index + 7))
+		local Character = string.char(tonumber(Byte, 2)::number)
+		Append(Decoded, Character)
 	end
-	return Decoded
+	return table.concat(Decoded)
 end
 
 --[[ HexDecode - Converts a hexadecimal string to a regular string.
