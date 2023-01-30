@@ -233,7 +233,7 @@ function String.IsValidUsername(Str: string)
         return false, Feedbacks.LEUnderscores
     elseif UnderscoreCount() > 1 then
         return false, Feedbacks.MaxUnderscores
-    elseif string.match(Str, "^[%d]$") then
+    elseif string.match(Str, "^[%d]+$") then
         if CharCount > 6 then
             return false, Feedbacks.PrivateInfo
         else
