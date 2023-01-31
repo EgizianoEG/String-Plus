@@ -8,9 +8,22 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------|
 local String = {}
 local Cache = {["."] = {}}
+type GenerateOptions = {
+	["CharSet"]: (string | {string})?,
+	["TotalSections"]: number?,
+	["SectionLength"]: number?,
+	["Delimiter"]: string?,
+	["Prefix"]: string?,
+	["Suffix"]: string?,
+}
 
 for Charcter = 0, 255 do
 	Cache["."][Charcter+1] = string.char(Charcter)
+end
+
+--| Will be used to insert new strings into tables.
+local function Append(Array: {any}, Item: any)
+	Array[#Array+1] = Item
 end
 
 --| Returns an array containing all possible characters that are under a specific class.
@@ -54,38 +67,34 @@ function String.Random(Length: number?, CharSet: string?)
 	return table.concat(Randomized)
 end
 
---[[ GenerateKey - Generates a randomized key of the specified character sets, sections, section length, prefix, and suffix.
--| @param   CharSet: A table of strings or a single string containing the character set(s) to use for generating each section of the key.
----|			* If a table is provided, each element of the table corresponds to a section of the key and specifies the character set for that section.
----|			* If a single string is provided, all sections of the key will use the same character set.
----|			* If the number of sets in the table is less than the TotalSections, they will be repeated until the table length match the TotalSections.
----|			* If CharSet is not provided or is nil, all sections of the key will use any alphanumeric character as the character set.
--| @param   TotalSections: The total number of sections in the key. Default: 4.
--| @param   SectionLength: The length of each section in the key. Default: 4.
--| @param   Delimiter: The delimiter used to separate the sections. Default: "-".
--| @param   Prefix: The prefix to use for the key. If the prefix length is less than the specified section length, it will be padded with random characters from the character set. If the prefix length is greater than the section length, it will be truncated.
--| @param   Suffix: The suffix to use for the key. If the suffix length is less than the specified section length, it will be padded with random characters from the character set. If the suffix length is greater than the section length, it will be truncated.
--| @return  string - The generated key.
--| @usage:
-	local Key = String.GenerateKey() -- Generate a random key with the default options
-	print(Key) -- Outputs a string like "A1B2-C3D4-E5F6-G7H8"
-	--
-	local Key2 = String.GenerateKey("[%d]", 5, 5, "-", "AA", "ZZ") -- Generate a random key with 5 sections of 5 digits each, delimited by "-", and with a prefix and suffix
-	print(Key2) -- Outputs a string like "AA821-76914-05026-71996-284ZZ"
-    --
-	local Key3 = String.GenerateKey("[%a]", 4, 8, ":", "100", "001") -- Generate a random key with 4 sections of 8 alphabetic characters each, delimited by ":", and with a prefix and suffix
-	print(Key3) -- Outputs a string like "100MYzy:jswtGIJl:JLDmPcrR:yfCqz001"
-    --
-	local Key4 = String.GenerateKey({"%u", "[01]", "%u", "%l"}, 4, 8, "][", "[", "]") -- Generate a random key with 4 sections of 8 alphabetic characters each, delimited by ":", and with a prefix and suffix
-	print(Key4) -- Outputs a string like "[POTWCAI][10111010][HLLHICYR][ylsgikm]"
-]]
-function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?)
-	local Delimiter = (type(Delimiter) == "string" and Delimiter) or ("-")
-	local SectionLength = ((type(SectionLength) == "number" and SectionLength > 0 and SectionLength) or 4)
-	local TotalSections = ((type(TotalSections) == "number" and TotalSections > 0 and TotalSections) or 4)
-	local GeneratedKey = {}
-	local MaxCharRange: any
+--[[ Generate - Generates a randomized string of the specified character sets, sections, section length, prefix, and suffix.
+-| @param
+Options: A table of options used by the function to structure the generated string which can contain:
+	- CharSet: A table of strings or a single string containing the character set(s) to use for generating each section of the key.
+		* If a table is provided, each element of the table corresponds to a section of the key and specifies the character set for that section.
+		* If a single string is provided, all sections of the key will use the same character set.
+		* If the number of sets in the table is less than the TotalSections, they will be repeated until the table length match the TotalSections.
+		* If CharSet is not provided or is nil, all sections of the key will use any alphanumeric character as the character set. 
+	- TotalSections: The total number of sections in the key. Default: 4.
+	- SectionLength: The length of each section in the key. Default: 4.
+	- Delimiter: The delimiter used to separate the sections. Default: "-".
+	- Prefix: The prefix to use for the key. If the prefix length is less than the specified section length, it will be padded with random characters from the character set. If the prefix length is greater than the section length, it will be truncated.
+	- Suffix: The suffix to use for the key. If the suffix length is less than the specified section length, it will be padded with random characters from the character set. If the suffix length is greater than the section length, it will be truncated.
+-| @return  string - The generated string.
+-| @return	table - The generated sections of the string without any additions.]]
+function String.Generate(Options: {CharSet: (string | {string})?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?})
+	Options = Options or {}
+	local CharSet = Options.CharSet
+	local SectionLength = ((type(Options.SectionLength) == "number" and Options.SectionLength > 0 and math.ceil(Options.SectionLength)) or 4)
+	local TotalSections = ((type(Options.TotalSections) == "number" and Options.TotalSections > 0 and math.ceil(Options.TotalSections)) or 4)
+	local Delimiter = (type(Options.Delimiter) == "string" and Options.Delimiter) or ("-")
+	local Prefix = Options.Prefix
+	local Suffix = Options.Suffix
+
 	local SPatterns
+	local MaxCharRange: any
+	local GeneratedChars = {}
+	local GeneratedSections = {}
 
 	if type(CharSet) == "table" then
 		SPatterns = {}
@@ -117,22 +126,23 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 	for Section = 1, TotalSections do
 		for _ = 1, SectionLength do
 			if type(SPatterns[Section]) == "table" and type(MaxCharRange) == "table" then
-				GeneratedKey[#GeneratedKey+1] = SPatterns[Section][math.random(MaxCharRange[Section])]
+				Append(GeneratedChars, SPatterns[Section][math.random(MaxCharRange[Section])])
 			else
-				GeneratedKey[#GeneratedKey+1] = SPatterns[math.random(MaxCharRange)]::any
+				Append(GeneratedChars, SPatterns[math.random(MaxCharRange)])
 			end
 		end
-		GeneratedKey[#GeneratedKey+1] = (Section ~= TotalSections and Delimiter) or ("")
+		Append(GeneratedSections, table.concat(GeneratedChars, "", (#GeneratedChars - SectionLength + 1)))
+		Append(GeneratedChars, (Section ~= TotalSections and Delimiter) or (""))
 	end
 
 	if type(Prefix) == "string" then
 		if #Prefix > SectionLength then
 			Prefix = string.sub(Prefix, 1, SectionLength)
 		elseif #Prefix < SectionLength then
-			Prefix = (Prefix) .. (table.concat(GeneratedKey, (""), #Prefix+1, SectionLength))
+			Prefix = (Prefix) .. (table.concat(GeneratedChars, (""), #Prefix+1, SectionLength))
 		end
 		for CIndex = 1, #Prefix do
-			GeneratedKey[CIndex] = string.sub(Prefix, CIndex, CIndex)
+			GeneratedChars[CIndex] = string.sub(Prefix, CIndex, CIndex)
 		end
 	end
 
@@ -145,12 +155,12 @@ function String.GenerateKey(CharSet: ({string} | string?), TotalSections: number
 				or ("[%w]")
 			Suffix = String.Random(SectionLength - #Suffix, Set) .. Suffix
 		end
-		local CCount = #GeneratedKey
+		local CCount = #GeneratedChars
 		for CIndex = 1, #Suffix do
-			GeneratedKey[CCount - SectionLength + CIndex - 1] = string.sub(Suffix, CIndex, CIndex)
+			GeneratedChars[CCount - SectionLength + CIndex - 1] = string.sub(Suffix, CIndex, CIndex)
 		end
 	end
-	return table.concat(GeneratedKey)
+	return table.concat(GeneratedChars), GeneratedSections
 end
 
 -------------
