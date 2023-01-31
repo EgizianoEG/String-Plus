@@ -23,7 +23,7 @@ export type StringPlusPascal = {
 	ICharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
 
 	Random: (Length: number?, CharSetPattern: string?) -> string,
-	GenerateKey: (CharSet: ({string} | string?), TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?) -> string,
+	Generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}) -> (string, {string}),
 
 	UTF8Reverse: (Str: string) -> string,
 	Stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
@@ -81,7 +81,7 @@ export type StringPlusPascal = {
 		PunctuationCount: number,
 	},
 
-    --| Standard String Library Typechecking:   (Disable this multi-line comment if wanted)
+	--| Standard String Library Typechecking:   (Disable this multi-line comment if wanted)
     --[[
     Byte: (s: string, i: number, j: number) -> (...number),
     Char: (byte: number, ...number) -> string,
@@ -126,7 +126,7 @@ export type StringPlusLowered = {
 	icharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
 
 	random: (Length: number?, CharSetPattern: string?) -> string,
-	generatekey: (CharSet: ({string} | string?), TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?) -> string,
+	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}) -> (string, {string}),
 
 	utf8reverse: (Str: string) -> string,
 	stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
@@ -184,7 +184,7 @@ export type StringPlusLowered = {
 		PunctuationCount: number,
 	},
 
-    --| Standard String Library Typechecking:   (Disable this multi-line comment if wanted)
+	--| Standard String Library Typechecking:   (Disable this multi-line comment if wanted)
     --[[
     byte: (s: string, i: number, j: number) -> (...number),
     char: (byte: number, ...number) -> string,
@@ -229,7 +229,7 @@ export type StringPlusCamel = {
 	iCharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
 
 	random: (Length: number?, CharSetPattern: string?) -> string,
-	generateKey: (CharSet: ({string} | string?), TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?) -> string,
+	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}) -> (string, {string}),
 
 	uTF8Reverse: (Str: string) -> string,
 	stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
@@ -287,7 +287,7 @@ export type StringPlusCamel = {
 		PunctuationCount: number,
 	},
 
-    --| Standard String Library Typechecking:   (Disable this multi-line comment if wanted)
+	--| Standard String Library Typechecking:   (Disable this multi-line comment if wanted)
     --[[
     byte: (s: string, i: number, j: number) -> (...number),
     char: (byte: number, ...number) -> string,
