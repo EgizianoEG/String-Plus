@@ -244,5 +244,170 @@ function String.IsValidUsername(Str: string)
     return true, ("")
 end
 
+--[[ PasswordValidate - A basic password validation function that returns if the password is valid, its expected strength score, and a feedback string if it was not valid.
+-| @param	Password: The password string to check.
+-| @param	EnforceStandardRequirements: A boolean determines wherether or not to enforce some predefined rules like minimum and maximum length, minimum special characters and other things.
+-| @return	boolean - A boolean value indicating whether the given password string is valid or not.
+-| @return	number - A number range between 0-100 that determines how good the given password is.
+-| @return	string? - A feedback string if the given input is not a valid password; Otherwise, a nil value is returned.]]
+function String.PasswordValidate(Password: string, EnforceStandardRequirements: boolean?)
+    local Score = 0
+    local PassLength = #Password
+    local PassLowered = string.lower(Password)
+    local Feedbacks = {
+        StandardRequirements = {
+            ["MinMaxChars"] = "Password length should be between 8 to 64 characters.",
+            ["SpecialChars"] = "Password should contain at least one special character (@, #, %, &, !, $, etc…).",
+            ["DigitChars"] = "Password should contain at least one digit(0-9).",
+            ["LettersNumbers"] = "Password should not be less than 8 characters long.",
+            ["LowercaseChars"] = "Password should contain at least one lowercase letter(a-z).",
+            ["UppercaseChars"] = "Password should contain at least one uppercase letter(A-Z).",
+        },
+        ["LessThanFour"] = "Password is too short.",
+        ["SameAlphabetic"] = "Password consists of only the same alphabetic character.",
+        ["NumberSequence"] = "Password consists of only the same or similar integers.",
+        ["BlackListed"] = "Password is weak and is banned from usage.",
+    }
+
+    local BlackList = {
+        ["password"] = true, ["password1"] = true, ["password1!"] = true, ["password123"] = true,
+        ["passw0rd"] = true, ["p@ssword"] = true, ["P@$$W0rd"] = true, ["P@$$W0rd0123"] = true,
+        ["drwossap"] = true, ["test"] = true,     ["test1"] = true, ["testing"] = true, ["asdf"] = true,
+        ["qwerty"] = true,   ["qwerty1"] = true,  ["qwerty123"] = true, ["1234qwerty"] = true,
+        ["1234qwer"] = true, ["qwert"] = true,    ["1234567890"] = true, ["12345678secret"] = true,
+        ["123123"] = true,   ["123456a"] = true,  ["987654321"] = true, ["654321"] = true, ["123321"] = true,
+        ["112233"] = true,   ["1q2w3e"] = true,   ["abc123"] = true, ["asdfghjkl"] = true, ["charlie"] = true,
+        ["1q2w3e4r5t"] = true, ["computer"] = true, ["qwe123"] = true, ["1qaz2wsx"] = true, ["secret"] = true,
+        ["welcome"] = true, ["a123456"] = true, ["love123"] = true, ["lol123"] = true, ["forever"] = true,
+        ["roblox"] = true, ["asdasd"] = true, ["Chegg123"] = true, ["soccer"] = true, ["soccer1"] = true,
+        ["baseball"] = true, ["1asdasdasdasd"] = true, ["0987654321"] = true, ["livetest"] = true,
+        ["pepper"] = true, ["bvtTest123"] = true, ["hello"] = true, ["tiger"] = true, ["pass1"] = true,
+        ["snowman"] = true, ["login"] = true, ["starwars"] = true, ["admin"] = true, ["iloveyou"] = true,
+        ["football"] = true, ["freedom"] = true, ["letmein"] = true, ["whatever"] = true, ["trustno1"] = true,
+        ["hacker"] = true, ["h4ck3r"] = true, ["dragon"] = true, ["zxcvbn"] = true, ["security"] = true,
+        ["friday"] = true, ["2022"] = true, ["2023"] = true, ["nothing"] = true, ["@dmin"] = true,
+        ["story"] = true, ["social"] = true, ["together"] = true, ["haha"] = true,
+    }
+
+    if PassLength < 4 then
+        return false, 0, Feedbacks.LessThanFour
+    end
+
+    if BlackList[Password] or BlackList[PassLowered] or BlackList[string.reverse(PassLowered)] then
+        return false, 0, Feedbacks.BlackListed
+    end
+
+    local CharTypeFrequencies = {
+        ["Uppered"] = 0,
+        ["Lowered"] = 0,
+        ["Digits"] = 0,
+        ["Specials"] = 0,
+        ["Other"] = 0,
+    }
+
+    for CharIndex = 1, PassLength do
+        local Character = string.sub(Password, CharIndex, CharIndex)
+        local CharType: string
+        if string.find(Character, "%u") then
+            CharType = "Uppered"
+        elseif string.find(Character, "%l") then
+            CharType = "Lowered"
+        elseif string.find(Character, "%d") then
+            CharType = "Digits"
+        elseif string.find(Character, "%p") then
+            CharType = "Specials"
+        else
+            CharType = "Other"
+        end
+        CharTypeFrequencies[CharType] += 1
+    end
+
+    if EnforceStandardRequirements then
+        if PassLength < 8 or PassLength > 64 then
+            return false, 0, Feedbacks.StandardRequirements.MinMaxChars
+        elseif CharTypeFrequencies.Digits == 0 then
+            return false, ((10 * 100) / 50), Feedbacks.StandardRequirements.DigitChars
+        elseif CharTypeFrequencies.Lowers == 0 then
+            return false, ((20 * 100) / 50), Feedbacks.StandardRequirements.LowercaseChars
+        elseif CharTypeFrequencies.Uppers == 0 then
+            return false, ((30 * 100) / 50), Feedbacks.StandardRequirements.UppercaseChars
+        elseif CharTypeFrequencies.Specials == 0 then
+            return false, ((40 * 100) / 50), Feedbacks.StandardRequirements.SpecialChars
+        end
+        Score += 50
+    end
+
+    if not EnforceStandardRequirements and string.match(Password, "^[%d]+$") then
+        for Num = 0, 9 do
+            local Common = ""
+            for i = 1, (Num + 1) do
+                Common ..= tostring(i)
+            end
+
+            if string.match(Password, Common)
+            or string.match(Password, string.reverse(Common)) then
+                return false, 0, Feedbacks.NumberSequence
+            end
+
+            for Repeates = 1, 9 do
+                if string.match(Password, string.rep(tostring(Num), Repeates)) then
+                    return false, 0, Feedbacks.NumberSequence
+                end
+            end
+        end
+    end
+
+    if not EnforceStandardRequirements and string.match(Password, "^[%a]+$") then
+        local FirstChar = string.lower(string.sub(Password, 1, 1))
+        local PasswordLowered = string.lower(Password)
+        if string.match(PasswordLowered, string.rep(FirstChar, PassLength)) then
+            return false, 0, Feedbacks.SameAlphabetic
+        end
+    end
+
+    if not EnforceStandardRequirements then
+        if PassLength > 7 then
+            if PassLength > 10 then
+                Score += 10
+            else
+                Score += 5
+            end
+        end
+
+        if CharTypeFrequencies.Digits > 0 then
+            if CharTypeFrequencies.Digits > 2 then
+                Score += 10
+            else
+                Score += 5
+            end
+        end
+
+        if CharTypeFrequencies.Lowered > 0 then
+            if CharTypeFrequencies.Lowered > 3 then
+                Score += 10
+            else
+                Score += 5
+            end
+        end
+
+        if CharTypeFrequencies.Uppered > 0 then
+            if CharTypeFrequencies.Uppered > 3 then
+                Score += 10
+            else
+                Score += 5
+            end
+        end
+
+        if CharTypeFrequencies.Specials > 0 then
+            if CharTypeFrequencies.Specials > 4 then
+                Score += 10
+            else
+                Score += 5
+            end
+        end
+    end
+    return true, ((Score * 100) / 50), nil
+end
+
 -------------
 return String
