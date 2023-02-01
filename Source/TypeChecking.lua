@@ -19,7 +19,8 @@ export type StringPlusPascal = {
 	ICharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
 
 	Random: (Length: number?, CharSetPattern: string?) -> string,
-	Generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}) -> (string, {string}),
+	RandomFromString: (Str: string, Length: number?, SameCharacterChances: boolean?) -> string,
+	Generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}?) -> (string, {string}),
 
 	UTF8Reverse: (Str: string) -> string,
 	Stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
@@ -122,7 +123,8 @@ export type StringPlusLowered = {
 	icharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
 
 	random: (Length: number?, CharSetPattern: string?) -> string,
-	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}) -> (string, {string}),
+	randomfromstring: (Str: string, Length: number?, SameCharacterChances: boolean?) -> string,
+	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}?) -> (string, {string}),
 
 	utf8reverse: (Str: string) -> string,
 	stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
@@ -225,7 +227,8 @@ export type StringPlusCamel = {
 	iCharacters: (Str: string) -> ((string, number) -> (number, string), string, number),
 
 	random: (Length: number?, CharSetPattern: string?) -> string,
-	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}) -> (string, {string}),
+	randomFromString: (Str: string, Length: number?, SameCharacterChances: boolean?) -> string,
+	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}?) -> (string, {string}),
 
 	uTF8Reverse: (Str: string) -> string,
 	stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
