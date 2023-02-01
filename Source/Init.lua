@@ -235,6 +235,19 @@ function StringPlus.FilterByLength(StringArray: {string}, Length: number)
 	return Filtered
 end
 
+--[[ Segments - Takes a string input and splits it into segments based on the provided length parameter. The segments are stored as elements in an array and returned as the output.
+-| @param   Str: The input string
+-| @param   Length The length of each seagment in the returned table (the last seagment could not be the same length. self-explanatory).
+-| @return  table - The seagments of the input string in an array.]]
+function StringPlus.Segments(Str: string, Length: number)
+    local Fragmented = {}
+    for CharIndex = 1, #Str, Length do
+        local Part = string.sub(Str, CharIndex, (CharIndex - 1 + Length))
+        Append(Fragmented, Part)
+    end
+    return Fragmented
+end
+
 --[[ GetLongestWord - returns the longest word in a string.
 -| @param	Str: The string to search for the longest word.
 -| @return	The longest word in the string along with its length (character count).]]
