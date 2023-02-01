@@ -28,7 +28,7 @@ export type StringPlusPascal = {
 	Generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}?) -> (string, {string}),
 
 	UTF8Reverse: (Str: string) -> string,
-	Stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
+	Stringify: (Table: {[any]: any}, IndentionSize: number?, IndentionCharacter: string?, IsRecursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
 
 	Escape: (Str: string) -> string,
 	Truncate: (Str: string, Length: number, OmissionSuffix: string?) -> string,
@@ -134,7 +134,7 @@ export type StringPlusLowered = {
 	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}?) -> (string, {string}),
 
 	utf8reverse: (Str: string) -> string,
-	stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
+	stringify: (Table: {[any]: any}, IndentionSize: number?, IndentionCharacter: string?, IsRecursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
 
 	escape: (Str: string) -> string,
 	truncate: (Str: string, Length: number, OmissionSuffix: string?) -> string,
@@ -240,7 +240,7 @@ export type StringPlusCamel = {
 	generate: (Options: {CharSet: ({string} | string)?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?}?) -> (string, {string}),
 
 	uTF8Reverse: (Str: string) -> string,
-	stringify: (Tabel: {[any]: any}, TabSize: number?, IndentionCharacter: string?, Recursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
+	stringify: (Table: {[any]: any}, IndentionSize: number?, IndentionCharacter: string?, IsRecursive: boolean?, Cache: {[any]: any}?, CIndention: number?) -> string,
 
 	escape: (Str: string) -> string,
 	truncate: (Str: string, Length: number, OmissionSuffix: string?) -> string,
