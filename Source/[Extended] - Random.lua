@@ -82,8 +82,8 @@ Options: A table of options used by the function to structure the generated stri
 	- Suffix: The suffix to use for the key. If the suffix length is less than the specified section length, it will be padded with random characters from the character set. If the suffix length is greater than the section length, it will be truncated.
 -| @return  string - The generated string.
 -| @return	table - The generated sections of the string without any additions.]]
-function String.Generate(Options: {CharSet: (string | {string})?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?})
-	Options = Options or {}
+function String.Generate(Options: GenerateOptions?)
+	local Options = (Options or {})::GenerateOptions
 	local CharSet = Options.CharSet
 	local SectionLength = ((type(Options.SectionLength) == "number" and Options.SectionLength > 0 and math.ceil(Options.SectionLength)) or 4)
 	local TotalSections = ((type(Options.TotalSections) == "number" and Options.TotalSections > 0 and math.ceil(Options.TotalSections)) or 4)
