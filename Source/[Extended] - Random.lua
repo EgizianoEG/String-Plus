@@ -39,8 +39,8 @@ local function CharactersFromSet(CharSet: string)
 end
 
 --[[ Random - Generates a random string of the specified length and character set.
--| @param	Length: The length of the string to generate. Default: 20.
--| @param	CharSet: The character set to use for generating the string. The default is any alphanumeric character.
+-| @param	Length (Optional): The length of the string to generate. Default: 20.
+-| @param	CharSet (Optional): The character set to use for generating the string. The default is any alphanumeric character.
 -| @return  string - The generated random string.
 -| @usage:
 	local RandomString = Random(10, "[%d]") -- Generate a random string of length 10 with only digits
@@ -67,6 +67,37 @@ function String.Random(Length: number?, CharSet: string?)
 	return table.concat(Randomized)
 end
 
+--[[ RandomFromString - Used to create a randomized string based on an input one's characters.
+-| @param	Str: A string that serves as the character set to generate the randomized string from.
+-| @param	Length (Optional): An integer that specifies the length of the desired randomized string. The default value is 10.
+-| @param	SameCharacterChances (Optional): A boolean that specifies whether the output string is randomized by the same chance for every character to appear (not allowing repeats in the structured CharSet) or not. The default value is true.
+-| @return  string - The generated random string.]]
+function String.RandomFromString(Str: string, Length: number?, SameCharacterChances: boolean?)
+    local CharSet = {}
+    local Randomized = {}
+    local CharSetMaxRange = 0
+	local Length = (type(Length) == "number" and math.ceil(Length)) or 10
+	SameCharacterChances = (SameCharacterChances ~= true and false) or true
+
+    for CharIndex = 1, #Str do
+        local Character = string.sub(Str, CharIndex, CharIndex)
+        if SameCharacterChances then
+            if not table.find(CharSet, Character) then
+                Append(CharSet, Character)
+            end
+        else
+            Append(CharSet, Character)
+        end
+    end
+
+    CharSetMaxRange = #CharSet
+    for CharIndex = 1, Length do
+		Randomized[CharIndex] = CharSet[math.random(CharSetMaxRange)]
+	end
+
+    return table.concat(Randomized)
+end
+
 --[[ Generate - Generates a randomized string of the specified character sets, sections, section length, prefix, and suffix.
 -| @param
 Options: A table of options used by the function to structure the generated string which can contain:
@@ -82,8 +113,8 @@ Options: A table of options used by the function to structure the generated stri
 	- Suffix: The suffix to use for the key. If the suffix length is less than the specified section length, it will be padded with random characters from the character set. If the suffix length is greater than the section length, it will be truncated.
 -| @return  string - The generated string.
 -| @return	table - The generated sections of the string without any additions.]]
-function String.Generate(Options: {CharSet: (string | {string})?, TotalSections: number?, SectionLength: number?, Delimiter: string?, Prefix: string?, Suffix: string?})
-	Options = Options or {}
+function String.Generate(Options: GenerateOptions?)
+	local Options = (Options or {})::GenerateOptions
 	local CharSet = Options.CharSet
 	local SectionLength = ((type(Options.SectionLength) == "number" and Options.SectionLength > 0 and math.ceil(Options.SectionLength)) or 4)
 	local TotalSections = ((type(Options.TotalSections) == "number" and Options.TotalSections > 0 and math.ceil(Options.TotalSections)) or 4)
