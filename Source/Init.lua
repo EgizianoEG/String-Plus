@@ -339,9 +339,9 @@ function StringPlus.AnalyzeText(Str: string)
 	local WordLengthSum = 0
 
 	for Line in string.gmatch(Str, "[^\r\n]+") do
-		for Word in string.gmatch(Line, "[%a]+") do
-			for Char in string.gmatch(Word, "[.]") do
-				if string.match(Char, "[%a]") then
+		for Word in string.gmatch(Line, "%a+") do
+			for Char in string.gmatch(Word, ".") do
+				if string.match(Char, "%a") then
 					if string.match(Char, "[aeiouAEIOU]") then
 						Num_Vowels += 1
 					else
@@ -351,10 +351,14 @@ function StringPlus.AnalyzeText(Str: string)
 				end
 			end
 
-			if WordAppearCount[Word] then
-				WordAppearCount[Word] += 1
-			else
-				WordAppearCount[Word] = 1
+			local IsConsideredAWord = (#Word > 1 and true) or (not string.match(Word, "[^aAbBiImMcCoO]"))
+
+			if IsConsideredAWord then
+				if WordAppearCount[Word] then
+					WordAppearCount[Word] += 1
+				else
+					WordAppearCount[Word] = 1
+				end
 			end
 
 			if #Word > LongestWord.Length then
@@ -362,14 +366,17 @@ function StringPlus.AnalyzeText(Str: string)
 				LongestWord.Length = #Word
 			end
 
-			if ShortestWord.Length == 0 or #Word < ShortestWord.Length then
+			if IsConsideredAWord and ShortestWord.Length == 0 or #Word < ShortestWord.Length then
 				ShortestWord.Word = Word
 				ShortestWord.Length = #Word
 			end
-			Num_Words += 1
-			Append(WordLenghts, #Word)
+
+			if IsConsideredAWord then
+				Num_Words += 1
+				Append(WordLenghts, #Word)
+			end
 		end
-		for Capture in string.gmatch(Line, "[%S]") do
+		for Capture in string.gmatch(Line, "[^%s%a]") do
 			if string.match(Capture, "[%d]") then
 				Num_Digits += 1
 			elseif string.match(Capture, "[%p]") then
