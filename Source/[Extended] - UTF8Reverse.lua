@@ -13,6 +13,11 @@
 local function UTF8Reverse(Str: string)
 	local Words = {}
 	local CurrentWord = ""
+	local TailingPuncStart, _, TailingPunc = string.find(Str, "(%p+)$")
+
+	if TailingPuncStart then
+		Str = string.sub(Str, 1, TailingPuncStart - 1)
+	end
 
 	for Start, End in utf8.graphemes(Str) do
 		local Grapheme = string.sub(Str, Start, End)
@@ -29,7 +34,7 @@ local function UTF8Reverse(Str: string)
 	for i = 1, Middle do
 		Words[i], Words[End - i + 1] = Words[End - i + 1], Words[i]
 	end
-	return table.concat(Words, " ")
+	return (TailingPunc or "") .. table.concat(Words, " ")
 end
 
 ------------------
