@@ -12,8 +12,8 @@ remote_branch: gh-pages
 use_directory_urls: true
 
 theme:
-    language: en
     name: material
+    language: en
     custom_dir: Docs/Overrides
     favicon: Images/SiteIcon.png
     icon:
@@ -28,8 +28,13 @@ theme:
         - header.autohide
         - navigation.top
         - navigation.tabs
-        - navigation.tabs.sticky
         - navigation.footer
+        - navigation.tracking
+        - navigation.indexes
+        # - navigation.instant
+
+        # - toc.follow
+        # - toc.integrate
 
         - search.share
         - search.suggest
@@ -58,9 +63,12 @@ theme:
         accent: light blue
 
 plugins:
+    - tags
+    - macros:
+        module_name: Docs/Extra/Macros
+        include_dir: Docs/Extra
     - search:
         separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
-    - tags
     - social:
         cards: true
         cards_font: Roboto
@@ -72,24 +80,36 @@ plugins:
 
 markdown_extensions:
     - toc:
+        title: On This Page
+        toc_depth: 3
         permalink: ⚓︎
         permalink_title: Anchor Link
-        
+    - markdown.extensions.abbr
+    - tables
     - abbr
+    - attr_list
     - admonition
     - footnotes
     - def_list
-    - pymdownx.emoji
+    - md_in_html
     - pymdownx.details
-    - pymdownx.highlight
+    - pymdownx.inlinehilite
+    - pymdownx.highlight:
+        linenums: true
     - pymdownx.superfences
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
+        options:
+          custom_icons:
+            - Docs/Overrides/.icons
     - pymdownx.tabbed:
         alternate_style: true
 
 extra:
   generator: true
   social:
-    - icon: Custom/RobloxStudioIcon
+    - icon: custom/robloxstudio
       link: https://devforum.roblox.com/t/2094017
       name: DevForum Topic
     - icon: simple/roblox
@@ -99,14 +119,20 @@ extra:
 extra_css:
   - Stylesheets/LightMode.css
   - Stylesheets/DarkMode.css
+  - Stylesheets/Extra.css
+  - Stylesheets/Icons.css
+
+extra_javascript:
+  - Extra/Java.js
 
 # Documentation Tree:
 nav:
   - Home: index.md
-  - Main Module: MainModule.md
+  - Main Module: Modules/MainModule.md
   - Sub-Modules:
-      - Validator: "SubModules/Validator.md"
-      - Random: "SubModules/Random.md"
-      - Iterators: "SubModules/Iterators.md"
-      - Stringify: "SubModules/Stringify.md"
-      - UTF8Reverse: "SubModules/UTF8Reverse.md"
+      - Validator: Modules/Validator.md
+      - Random: Modules/Random.md
+      - Iterators: Modules/Iterators.md
+      - Stringify: Modules/Stringify.md
+      - UTF8Reverse: Modules/UTF8Reverse.md
+  - Change Log: ChangeLog.md
