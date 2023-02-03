@@ -460,6 +460,43 @@ function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 	return Str
 end
 
+--[[ Distort - Distorts a given string by replacing a specified percentage of its characters with random characters from a specified set of replacement characters.
+-| @param   Str: The string to be distorted.
+-| @param   Percentage: The percentage of characters to be replaced, must be between 0 and 100.
+-| @param   ReplacementChars (Optional): An array of characters/strings to replace the characters in the original string with. The default value is {"#", "$", "@", "&"}.
+-| @return  string - A string with a percentage of characters from the original string replaced with characters from the set of replacement characters.]]
+function StringPlus.Distort(Str: string, Percentage: number, ReplacementChars: {string}?)
+    if #Str == 0 then return Str end
+
+    Percentage = math.clamp(Percentage, 0, 100)
+    local Length = #Str
+    local Distorted, Processed = string.split(Str, ""), {}
+    local ReplacementChars = (ReplacementChars or {"#", "$", "@", "&"}) :: any
+    local RepCharacterCount = #ReplacementChars
+
+    if Length == 1 then
+        local ShouldReplace = math.random(0, 100) <= Percentage
+        return (ShouldReplace and ReplacementChars[math.random(RepCharacterCount)]) or Str
+    end
+
+    local NumToReplace = math.clamp(math.round((Length * Percentage) / 100), 1, Length)
+    local NumReplaced = 0
+
+    repeat
+        local CharIndex = math.random(Length)
+        if Processed[CharIndex] then
+            repeat
+                CharIndex = math.random(Length)
+            until not Processed[CharIndex]
+        end
+        NumReplaced += 1
+        Processed[CharIndex] = true
+        Distorted[CharIndex] = ReplacementChars[math.random(RepCharacterCount)]
+    until NumReplaced == NumToReplace
+
+    return table.concat(Distorted)
+end
+
 --[[ TitleCase - Converts a string to title case, with optional strict adherence to title case rules.
 -| @param	Str: The input string.
 -| @param	Strict (optional): Specifies whether to strictly adhere to title case rules. If this parameter is not provided, or is set to false, words that are exempt from title casing its first character will be upper-cased. If Strict is set to true, exempt words would be lower-cased.
