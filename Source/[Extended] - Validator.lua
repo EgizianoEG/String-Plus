@@ -16,7 +16,7 @@ function String.IsNumeric(Str: string)
 	return (tonumber(Str) ~= nil or string.match(Str, "^%s*[+-]?%d*%.?%d+%s*$") ~= nil)
 end
 
---[[ IsNumeric - Returns a boolean value indicating whether the given string contains only integer characters (+,-,0-9).
+--[[ IsInteger - Returns a boolean value indicating whether the given string contains only integer characters (+,-,0-9).
 ---| @examples:	100: true, -100: true, +100: true, 10.0: false, "  .568": false,"  1": false
 -| @param	Str: The string to check if it contains numeric characters.
 -| @return	boolean: True if the string contains only numeric characters, false otherwise.]]

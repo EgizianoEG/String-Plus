@@ -323,10 +323,10 @@ function StringPlus.UniqueWords(Str: string, ReturnString: boolean?)
 	return (not ReturnString and UniqueWords) or table.concat(UniqueWords, (" "))
 end
 
---[[ AnalyzeText - Calculates statistical information about a string.
+--[[ Analyze - Calculates statistical information about a string.
 -| @param	Str: The input string.
 -| @return	A table containing statistical information about the input string, including the number of characters, words, unique words, vowels, consonants, and lines in the string, as well as a count of the number of times each word appears in the string.]]
-function StringPlus.AnalyzeText(Str: string)
+function StringPlus.Analyze(Str: string)
 	local Num_Chars, Num_Alpha = #Str, 0
 	local Num_Lines, Num_Words = 0, 0
 	local Num_Digits, Num_Punctuation = 0, 0
@@ -460,11 +460,11 @@ function StringPlus.Expand(Str: string, Subset: {[string | number]: any})
 	return Str
 end
 
---[[ ApplyTitleCase - Converts a string to title case, with optional strict adherence to title case rules.
+--[[ TitleCase - Converts a string to title case, with optional strict adherence to title case rules.
 -| @param	Str: The input string.
 -| @param	Strict (optional): Specifies whether to strictly adhere to title case rules. If this parameter is not provided, or is set to false, words that are exempt from title casing its first character will be upper-cased. If Strict is set to true, exempt words would be lower-cased.
 -| @return	The input string in title case.]]
-function StringPlus.ApplyTitleCase(Str: string, Strict: boolean?): string
+function StringPlus.TitleCase(Str: string, Strict: boolean?): string
 	local StrArray = {}
 	local TitleCasePreservations = {
 		"a", "an", "and", "or", "the", "but", "in", "on", "for", "up",
