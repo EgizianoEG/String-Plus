@@ -108,13 +108,13 @@ markdown_extensions:
 
 extra:
   generator: true
-  social:
-    - icon: custom/robloxstudio
-      link: https://devforum.roblox.com/t/2094017
-      name: DevForum Topic
-    - icon: simple/roblox
-      link: https://www.roblox.com/library/11868937809
-      name: Roblox Model
+  # social:
+  #   - icon: custom/robloxstudio
+  #     link: https://devforum.roblox.com/t/2094017
+  #     name: DevForum Topic
+  #   - icon: simple/roblox
+  #     link: https://www.roblox.com/library/11868937809
+  #     name: Roblox Model
 
 extra_css:
   - Stylesheets/LightMode.css
