@@ -81,6 +81,19 @@ function String.IsASCII(Str: string)
 	return true
 end
 
+--[[ IsHexColor - Checks if a given string is a valid hexadecimal color code or not.
+-| @param   Str: The input string to check
+-| @param   EnforceHash (Optional): a boolean that indicates whether or not the hexadecimal color code should start with a # symbol.
+-| @return  boolean - If EnforceHash is set to true, then the function only returns true if the Str starts with a #. If EnforceHash is not set or set to false, then the function returns true regardless of whether or not the input string starts with a #.]]
+function String.IsHexColor(Str: string, EnforceHash: boolean?)
+	if #Str > 7 then return false end
+	if EnforceHash then
+		return (#Str >=4 and string.match(Str, "^#[%x]+$") ~= nil)
+	else
+		return (#Str >=3 and string.match(Str, "^#?[%x]+$") ~= nil)
+	end
+end
+
 --[[ IsPalindrome - Returns true if the given string is a palindrome, false otherwise. A palindrome is a word or phrase that is spelled the same way forwards and backwards.
 ---| By default, the function is case-insensitive, meaning that it treats uppercase and lowercase letters as the same. If the `CaseSensitive` parameter is set to true, the function will treat uppercase and lowercase letters as distinct.
 -| @param	Str: The string to check.
