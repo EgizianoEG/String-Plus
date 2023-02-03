@@ -1,5 +1,7 @@
 // Highlighting support for the library's functions, Enums, and string interpolation
 const spans = document.querySelectorAll("span");
+const links = document.querySelectorAll("a")
+
 for (let i = 0; i < spans.length; i++) {
     const span = spans[i];
     if (span.classList.contains("p")) {
@@ -69,5 +71,19 @@ for (let i = 0; i < spans.length; i++) {
         span.classList.remove("err")
         span.classList.add("s")
         nextSpan.classList.add("s")
+    }
+}
+
+// Fix for content edit & content view (source of every page)
+for (let i = 0; i < links.length; i++) {
+    const link = links[i]
+    if (link.classList.contains("md-content__button")) {
+        const pathFromDir = link.href.match(".+master\/docs\/(.+)")[1]
+        if (link.title.startsWith("View")) {
+            link.href = `https://github.com/EgizianoEG/String-Plus/raw/main/Docs/${pathFromDir}`
+        }
+        else {
+            link.href = `https://github.com/EgizianoEG/String-Plus/edit/main/Docs/${pathFromDir}`
+        }
     }
 }
