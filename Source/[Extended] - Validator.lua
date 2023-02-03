@@ -310,7 +310,7 @@ function String.PasswordValidate(Password: string, EnforceStandardRequirements: 
         return false, 0, Feedbacks.BlackListed
     end
 
-    local CharTypeFrequencies = {
+    local CharTypeFrequencies: {[string]: number} = {
         ["Uppered"] = 0,
         ["Lowered"] = 0,
         ["Digits"] = 0,
@@ -419,7 +419,7 @@ function String.PasswordValidate(Password: string, EnforceStandardRequirements: 
             end
         end
     end
-    return true, ((Score * 100) / 50), nil
+    return true, ((Score * 100) / 50), nil::any
 end
 
 -------------
