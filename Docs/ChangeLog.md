@@ -11,7 +11,7 @@ description: The change log and history of the StringPlus Luau library
 
 # Change Log
 
-## {{ VerTitle("1.2.0", "January 30 2023") }}
+## {{ VerTitle("1.2.0", "February 3 2023") }}
 
 ### Added { #1.2.0#Added }
 
