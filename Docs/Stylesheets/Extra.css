@@ -1,0 +1,16 @@
+.version-date {
+    opacity: 0.75;
+}
+
+/* .kc = Keyword, constant */
+.kc {
+    font-weight: 600;
+}
+
+:root {
+    scroll-behavior: smooth;
+}
+
+.md-typeset h1 {
+    margin-bottom: 0;
+}
