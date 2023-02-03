@@ -18,7 +18,7 @@ The library includes functions for performing common tasks such as analyzing a s
 
 To use the StringPlus library, simply get it as a Model which is published on the
 <a href="https://create.roblox.com/marketplace/asset/11868937809" target="_blank" title="Asset Link">
-:Custom-RobloxStudio:{.robloxstudio} Roblox Creator Marketplace
+:custom-robloxstudio:{.robloxstudio} Roblox Creator Marketplace
 </a>
 and require it in your Luau code and call the desired function.
 
