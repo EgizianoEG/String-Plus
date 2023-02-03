@@ -58,7 +58,7 @@ export type StringPlusPascal = {
 	SnakeCase: (Str: string) -> string,
 	UniqueWords: (Str: string, ReturnString: boolean?) -> ({string} | string),
 	Expand: (Str: string, Subset: {[string | number]: any}) -> string,
-	ApplyTitleCase: (Str: string, Strict: boolean?) -> string,
+	TitleCase: (Str: string, Strict: boolean?) -> string,
 	Lines: (Str: string, KeepEnds: boolean?, ReturnAsATuple: boolean?) -> (...string | {string}),
 	RFind: (Str: string, Sub: string, Start: number?, End: number?) -> (number?, number?),
 	Partition: (Str: string, Separator: string, ReturnAsATuple: boolean?) -> (...string | {string}),
@@ -67,7 +67,7 @@ export type StringPlusPascal = {
 	BinaryDecode: (BinaryStr: string) -> string,
 	HexEncode: (Str: string) -> string,
 	HexDecode: (HexStr: string) -> string?,
-	AnalyzeText: (Str: string) -> {
+	Analyze: (Str: string) -> {
 		LineCount: number,
 		WordCount: number,
 		AvgWordLength: number,
@@ -164,7 +164,7 @@ export type StringPlusLowered = {
 	snakecase: (Str: string) -> string,
 	uniquewords: (Str: string, ReturnString: boolean?) -> ({string} | string),
 	expand: (Str: string, Subset: {[string | number]: any}) -> string,
-	applytitlecase: (Str: string, Strict: boolean?) -> string,
+	titlecase: (Str: string, Strict: boolean?) -> string,
 	lines: (Str: string, KeepEnds: boolean?, ReturnAsATuple: boolean?) -> (...string | {string}),
 	rfind: (Str: string, Sub: string, Start: number?, End: number?) -> (number?, number?),
 	partition: (Str: string, Separator: string, ReturnAsATuple: boolean?) -> (...string | {string}),
@@ -173,7 +173,7 @@ export type StringPlusLowered = {
 	binarydecode: (BinaryStr: string) -> string,
 	hexencode: (Str: string) -> string,
 	hexdecode: (HexStr: string) -> string?,
-	analyzetext: (Str: string) -> {
+	analyze: (Str: string) -> {
 		LineCount: number,
 		WordCount: number,
 		AvgWordLength: number,
@@ -270,7 +270,7 @@ export type StringPlusCamel = {
 	snakeCase: (Str: string) -> string,
 	uniqueWords: (Str: string, ReturnString: boolean?) -> ({string} | string),
 	expand: (Str: string, Subset: {[string | number]: any}) -> string,
-	applyTitleCase: (Str: string, Strict: boolean?) -> string,
+	titleCase: (Str: string, Strict: boolean?) -> string,
 	lines: (Str: string, KeepEnds: boolean?, ReturnAsATuple: boolean?) -> (...string | {string}),
 	rFind: (Str: string, Sub: string, Start: number?, End: number?) -> (number?, number?),
 	partition: (Str: string, Separator: string, ReturnAsATuple: boolean?) -> (...string | {string}),
@@ -279,7 +279,7 @@ export type StringPlusCamel = {
 	binaryDecode: (BinaryStr: string) -> string,
 	hexEncode: (Str: string) -> string,
 	hexDecode: (HexStr: string) -> string?,
-	analyzeText: (Str: string) -> {
+	analyze: (Str: string) -> {
 		LineCount: number,
 		WordCount: number,
 		AvgWordLength: number,
