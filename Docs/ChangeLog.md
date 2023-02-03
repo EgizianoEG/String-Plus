@@ -25,7 +25,7 @@ description: The change log and history of the StringPlus Luau library
 ### Improvements { #1.2.0#Improved }
 
 - Improved `BinaryDecode` function for the main module {{ FormatPL(7, "#") }}
-- Improved `UTF-8Reverese` function (properly handle trailing punctuation) {{ FormatPL(22, "#") }}
+- Improved `UTF-8Reverese` function (properly handle trailing punctuation) {{ FormatPL(23, "#") }}
 
 ### Fixed { #1.2.0#Fixed }
 
