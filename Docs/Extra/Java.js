@@ -1,25 +1,26 @@
-// Highlighting support for the library's functions, Enums, and string interpolation
 const spans = document.querySelectorAll("span");
-const links = document.querySelectorAll("a")
+const contentLinks = document.querySelectorAll("a.md-content__button")
 
-for (let i = 0; i < spans.length; i++) {
-    const span = spans[i];
+spans.forEach((span, index) => {
+    // Highlighting support for the library's functions and Roblox Enums
     if (span.classList.contains("p")) {
-        const nextSpan = spans[i + 1];
-        const nextSpanPlus = spans[i + 3]
-        const prevSpan = spans[i - 1];
-        if (nextSpan && nextSpan.classList.contains("n") && spans[i + 2].classList.contains("p")) {
+
+        const prevSpan = spans[index - 1]
+        const nextSpan = spans[index + 1]
+        const parCBracket = spans[index + 2]
+        const nextSpanPlus = spans[index + 3]
+
+        if (nextSpan && parCBracket && nextSpan.classList.contains("n") && parCBracket.classList.contains("p")) {
             const prevTextContent = prevSpan.textContent
             if (prevSpan.classList.contains("n")) {
-                if (prevTextContent == "String" || prevTextContent == "StringPlus") {
+                if (prevTextContent === "String" || prevTextContent === "StringPlus") {
                     nextSpan.classList.add("nf");
                     nextSpan.classList.remove("n")
-                }
-                else {
-                    if (prevTextContent == "Enum") {
+                } else {
+                    if (prevTextContent === "Enum") {
                         prevSpan.classList.add("md-code-enum-data-type")
-                        prevSpan.classList.remove("n")
                         nextSpan.classList.add("md-code-enum")
+                        prevSpan.classList.remove("n")
                         nextSpan.classList.remove("n")
                         if (nextSpanPlus && nextSpanPlus.classList.contains("n")) {
                             nextSpanPlus.classList.add("md-code-enum-item")
@@ -32,58 +33,55 @@ for (let i = 0; i < spans.length; i++) {
     }
 
     // String interpolation highlighting support
-    if (span.parentElement.tagName == "CODE" && span.classList.contains("err") && span.textContent == "`" && !span.classList.contains("s")) {
-        const inside = [];
-        let nextSpan = span.nextSibling;
-        while ( nextSpan ) {
+    if (span.parentElement.tagName === "CODE" && span.classList.contains("err") && span.textContent === "`" && !span.classList.contains("s")) {
+        const spansBetween = []
+        let nextSpan = span.nextSibling
+
+        while (nextSpan) {
             if (!nextSpan.classList.contains("err")) {
-                inside.push(nextSpan);
-                nextSpan = nextSpan.nextElementSibling;
+                spansBetween.push(nextSpan)
+                nextSpan = nextSpan.nextElementSibling
             } else {
                 nextSpan.classList.remove("err")
                 break
             }
         }
 
-        inside.forEach(Span => {
-            if (Span.classList.contains("p")) {
-                Span.classList.add("s")
+        spansBetween.forEach(insideSpan => {
+            if (insideSpan.classList.contains("p")) {
+                insideSpan.classList.add("s")
             } else {
-                if (Span.classList.contains("s2")) {
-                    const matches = Span.textContent.match("(.+\{)(.*?)(\}.+)")
-                    if (matches) {
+                if (insideSpan.classList.contains("s2")) {
+                    const matches = insideSpan.textContent.match("(.+\{)(.*?)(\}.+)")
+                    if ( matches ) {
                         const varNameSpan = document.createElement("span")
                         const leftContentSpan = document.createElement("span")
-
+                        
                         varNameSpan.textContent = matches[2]
                         leftContentSpan.textContent = matches[1]
-
-                        leftContentSpan.classList.add("s")
+                        
                         varNameSpan.classList.add("n")
-
-                        Span.parentElement.insertBefore(leftContentSpan, Span);
-                        Span.parentElement.insertBefore(varNameSpan, Span);
-                        Span.textContent = matches[3]
+                        leftContentSpan.classList.add("s")
+                        
+                        insideSpan.textContent = matches[3]
+                        insideSpan.parentElement.insertBefore(leftContentSpan, insideSpan)
+                        insideSpan.parentElement.insertBefore(varNameSpan, insideSpan)
                     }
                 }
             }
         });
-        span.classList.remove("err")
         span.classList.add("s")
+        span.classList.remove("err")
         nextSpan.classList.add("s")
     }
-}
+});
 
 // Fix for content edit & content view (source of every page)
-for (let i = 0; i < links.length; i++) {
-    const link = links[i]
-    if (link.classList.contains("md-content__button")) {
-        const pathFromDir = link.href.match(".+master\/docs\/(.+)")[1]
-        if (link.title.startsWith("View")) {
-            link.href = `https://github.com/EgizianoEG/String-Plus/raw/main/Docs/${pathFromDir}`
-        }
-        else {
-            link.href = `https://github.com/EgizianoEG/String-Plus/edit/main/Docs/${pathFromDir}`
-        }
+contentLinks.forEach((link) => {
+    const pathFromDocs = link.href.match(".+master\/docs\/(.+)")[1]
+    if (link.title.startsWith("View")) {
+        link.href = `https://github.com/EgizianoEG/String-Plus/raw/main/Docs/${pathFromDocs}`
+    } else {
+        link.href = `https://github.com/EgizianoEG/String-Plus/edit/main/Docs/${pathFromDocs}`
     }
-}
+});
