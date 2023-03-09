@@ -1,0 +1,43 @@
+<li class="md-nav__item">
+    <a href="{{ toc_item.url }}" class="md-nav__link">
+        {% set types = ["boolean", "number", "string", "table", "enum", "tuple"] %}
+        {% set ns = namespace(isvariable = false) %}
+        {% for vartype in types %}
+          {% if toc_item.title.endswith(vartype) %}
+            {% set ns.isvariable = true %}
+          {% endif %}
+        {%- endfor %}
+
+        {% if ns.isvariable -%}
+          {% set splitted = toc_item.title.split(" ") %}
+          {% set variable = splitted.pop(0) %}
+          {% set type = " ".join(splitted) %}
+          <span class="md-ellipsis">
+              <span>
+                  {{ variable }} <small class="variable-type">{{ type }}</small>
+              </span>
+          </span>
+        {% elif toc_item.title.endswith("2023") -%}
+          {% set splitted = toc_item.title.split(" ") %}
+          {% set version = splitted.pop(0) %}
+          {% set date = " ".join(splitted) %}
+          <span class="md-ellipsis">
+              <span>
+                {{ version }} <small class="version-date">{{ date }}</small>
+              </span>
+          </span>
+        {% else %}
+          {{ toc_item.title }}
+        {%- endif %}
+    </a>
+  
+    {% if toc_item.children %}
+      <nav class="md-nav" aria-label="{{ toc_item.title }}">
+        <ul class="md-nav__list">
+          {% for toc_item in toc_item.children %}
+            {% include "partials/toc-item.html" %}
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+</li>
