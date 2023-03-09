@@ -426,7 +426,7 @@ Removes the specified characters from the end of the string or in other words, t
 - `Characters : string` {{ Optional }} <br/> A string containing the characters to be removed. <br/> If not specified, the function will remove white-space characters[^2].
 
 #### Returns { #rstrip-returns }
-- {{FormatType("string")}} <br/> A new string with leading and trailing characters removed.
+- {{FormatType("string")}} <br/> A new string with trailing characters removed.
 
 #### Examples { #rstrip-examples }
 === "Code Sample"
@@ -463,7 +463,7 @@ Removes leading characters from a given string i.e. left side characters.
 - `Characters : string` {{ Optional }} <br/> The characters to be removed from the beginning of the string. If no characters are specified, the function will remove leading white-space characters[^2] by default.
 
 #### Returns { #lstrip-returns }
-- {{FormatType("string")}} <br/> A new string with leading and trailing characters removed.
+- {{FormatType("string")}} <br/> A new string with leading characters removed.
 
 #### Examples { #lstrip-examples }
 === "Code Sample"
