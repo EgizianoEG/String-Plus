@@ -1,0 +1,27 @@
+.roblox {
+    color: #E2211A;
+}
+
+.robloxstudio {
+    transition: color 350ms;
+}
+
+.robloxstudio:hover {
+    color: #009FFF;
+}
+
+html .md-footer-meta.md-typeset a.devforum-topic:hover {
+    color: #009FFF;
+}
+
+html .md-footer-meta.md-typeset a.roblox-model:hover {
+    color: #E2211A;
+}
+
+.md-typeset a, .md-typeset a:before {
+    transition: color 500ms;
+}
+
+.md-header__button.md-logo img, .md-header__button.md-logo svg {
+    height: 1.5rem;
+}
