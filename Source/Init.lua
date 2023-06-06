@@ -516,7 +516,10 @@ function StringPlus.TitleCase(Str: string, Strict: boolean)
     Str = string.gsub(Str, "%w+[^%S\r\n]*", function(Cap: string)
         if string.match(Cap, "x%d+") then
             return string.lower(Cap)
-        elseif table.find(Lowers, string.lower(string.match(Cap, "%S+"))) then
+		end
+
+		if not Strict then return UpperFirst(Cap) end
+        if table.find(Lowers, string.lower(string.match(Cap, "%S+"))) then
             if string.find(Str, Cap) ~= 1 then
                 return string.lower(Cap)
             else
