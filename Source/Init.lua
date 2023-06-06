@@ -501,33 +501,35 @@ end
 -| @param	Str: The input string.
 -| @param	Strict (optional): Specifies whether to strictly adhere to title case rules. If this parameter is not provided, or is set to false, words that are exempt from title casing its first character will be upper-cased. If Strict is set to true, exempt words would be lower-cased.
 -| @return	The input string in title case.]]
-function StringPlus.TitleCase(Str: string, Strict: boolean?): string
-	local StrArray = {}
-	local TitleCasePreservations = {
-		"a", "an", "and", "or", "the", "but", "in", "on", "for", "up",
-		"at", "by", "for", "from", "with", "under", "until", "atop", "to",
-		"not", "over", "as", "down", "yet", "so", "into", "near", "off", "over",
-		"plus", "past", "out", "nor"
-	}
+function StringPlus.TitleCase(Str: string, Strict: boolean)
+    local Uppers = {"id", "atm"}
+    local Lowers = {
+        "a", "an", "and", "or", "the", "but", "in", "on", "of", "up", "at", "by",
+        "for", "from", "with", "under", "until", "atop", "to", "not", "over", "as",
+        "down", "yet", "so", "into", "near", "over", "plus", "past", "out", "nor"
+    }
 
-	Str = string.gsub(Str, "^%l+", string.upper)    -- First charachter is uppered.
-	Str = string.gsub(Str, "%s+%l", string.upper)   -- Characters after space are uppered.
-	Str = string.gsub(Str, "%w%-%u", string.lower)	-- Characters after dash are lowered.
+    local UpperFirst = function(Text: string)
+        return string.upper(string.sub(Text, 1, 1)) .. string.lower(string.sub(Text, 2))
+    end
 
-	-- Lowering any needed characters:
-	for Index, Word in ipairs(string.split(Str, " ")) do
-		Word = string.sub(Word, 1, 1) .. string.lower(string.sub(Word, 2))
-		if Strict and Index ~= 1 then
-			if table.find(TitleCasePreservations, Word:lower()) then
-				Append(StrArray, Word:lower())
-			else
-				Append(StrArray, Word)
-			end
-		else
-			Append(StrArray, Word)
-		end
-	end
-	return table.concat(StrArray, " ")
+    Str = string.gsub(Str, "%w+[^%S\r\n]*", function(Cap: string)
+        if string.match(Cap, "x%d+") then
+            return string.lower(Cap)
+        elseif table.find(Lowers, string.lower(string.match(Cap, "%S+"))) then
+            if string.find(Str, Cap) ~= 1 then
+                return string.lower(Cap)
+            else
+                return UpperFirst(Cap)
+            end
+        elseif table.find(Uppers, string.lower(string.match(Cap, "%S+"))) then
+            return string.upper(Cap)
+        else
+            return UpperFirst(Cap)
+        end
+    end)
+
+    return Str
 end
 
 --[[ Lines - Splits a string into an array of lines, with optional preservation of line endings.
